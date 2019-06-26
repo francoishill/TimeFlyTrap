@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 
 namespace TimeFlyTrap.Monitoring
@@ -46,6 +47,17 @@ namespace TimeFlyTrap.Monitoring
             idleTime = TimeSpan.FromMilliseconds(IdleTicks);
 
             return true;
+        }
+
+        [DllImport("user32.dll")]
+        public static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, out uint ProcessId);
+
+        public static string GetProcessOfWindowHandle(IntPtr windowHandle)
+        {
+            uint pid;
+            GetWindowThreadProcessId(windowHandle, out pid);
+            var p = Process.GetProcessById((int) pid);
+            return p.MainModule?.FileName;
         }
     }
 }

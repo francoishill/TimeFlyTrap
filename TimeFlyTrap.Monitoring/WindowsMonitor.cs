@@ -208,6 +208,12 @@ namespace TimeFlyTrap.Monitoring
             var buff = new StringBuilder(nChars);
             handle = GetForegroundWindow();
 
+            var file = Win32.GetProcessOfWindowHandle(handle);
+            if (!string.IsNullOrWhiteSpace(file))
+            {
+                return file;
+            }
+
             if (GetWindowModuleFileName(handle, buff, nChars) > 0)
             {
                 return buff.ToString();
