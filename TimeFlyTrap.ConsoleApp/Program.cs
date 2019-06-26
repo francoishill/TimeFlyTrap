@@ -48,6 +48,9 @@ namespace TimeFlyTrap.ConsoleApp
                     filePathWithoutExtension + ".json",
                     filePathWithoutExtension + ".html");
             }
+            
+            Console.WriteLine("Monitoring aborted, press any key to close");
+            Console.ReadKey();
         }
     }
 }
