@@ -56,8 +56,16 @@ namespace TimeFlyTrap.Monitoring
         {
             uint pid;
             GetWindowThreadProcessId(windowHandle, out pid);
-            var p = Process.GetProcessById((int) pid);
-            return p.MainModule?.FileName;
+            try
+            {
+                var p = Process.GetProcessById((int)pid);
+                return p.MainModule?.FileName;
+            }
+            catch(Exception exception)
+            {
+                Console.WriteLine($"Failed to GetProcessOfWindowHandle, exception: " + exception.Message);
+                return null;
+            }
         }
     }
 }
