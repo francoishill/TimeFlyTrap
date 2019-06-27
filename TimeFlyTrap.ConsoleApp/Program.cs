@@ -11,6 +11,7 @@ namespace TimeFlyTrap.ConsoleApp
         private static WindowsMonitor _monitor;
 
         // ReSharper disable once ArrangeTypeMemberModifiers
+        // ReSharper disable once UnusedParameter.Local
         static void Main(string[] args)
         {
             _monitor = new WindowsMonitor(
@@ -25,6 +26,8 @@ namespace TimeFlyTrap.ConsoleApp
             {
                 Thread.Sleep(TimeSpan.FromMilliseconds(500));
             }
+
+            // ReSharper disable once FunctionNeverReturns
         }
 
         private static void ConsoleOnCancelKeyPress(object sender, ConsoleCancelEventArgs e)
@@ -48,7 +51,7 @@ namespace TimeFlyTrap.ConsoleApp
                     filePathWithoutExtension + ".json",
                     filePathWithoutExtension + ".html");
             }
-            
+
             Console.WriteLine("Monitoring aborted, press any key to close");
             Console.ReadKey();
         }

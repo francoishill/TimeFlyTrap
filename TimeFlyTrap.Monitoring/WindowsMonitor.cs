@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Timers;
 using Newtonsoft.Json;
@@ -13,8 +12,6 @@ namespace TimeFlyTrap.Monitoring
 {
     public class WindowsMonitor
     {
-        //public static bool MustRecord = false;//Directory.Exists(@"c:\users\FrancoisLaptopDell") || Directory.Exists(@"c:\users\Francois");
-
         private const string NULL_WINDOW_TITLE = "[NULLWINDOWTITLE]";
         private const string NULL_FILE_PATH = "[NULLFILEPATH]";
         private static readonly TimeSpan _minimumIdleDuration = TimeSpan.FromSeconds(5);
@@ -192,9 +189,9 @@ namespace TimeFlyTrap.Monitoring
             const int nChars = 256;
             IntPtr handle;
             var buff = new StringBuilder(nChars);
-            handle = GetForegroundWindow();
+            handle = Win32.GetForegroundWindow();
 
-            if (GetWindowText(handle, buff, nChars) > 0)
+            if (Win32.GetWindowText(handle, buff, nChars) > 0)
             {
                 return buff.ToString();
             }
@@ -206,7 +203,7 @@ namespace TimeFlyTrap.Monitoring
             const int nChars = 256;
             IntPtr handle;
             var buff = new StringBuilder(nChars);
-            handle = GetForegroundWindow();
+            handle = Win32.GetForegroundWindow();
 
             var file = Win32.GetProcessOfWindowHandle(handle);
             if (!string.IsNullOrWhiteSpace(file))
@@ -214,21 +211,12 @@ namespace TimeFlyTrap.Monitoring
                 return file;
             }
 
-            if (GetWindowModuleFileName(handle, buff, nChars) > 0)
+            if (Win32.GetWindowModuleFileName(handle, buff, nChars) > 0)
             {
                 return buff.ToString();
             }
             return null;
         }
-
-        [DllImport("user32.dll")]
-        private static extern IntPtr GetForegroundWindow();
-
-        [DllImport("user32.dll")]
-        private static extern int GetWindowText(IntPtr hWnd, StringBuilder text, int count);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern uint GetWindowModuleFileName(IntPtr hwnd, StringBuilder lpszFileName, uint cchFileNameMax);
 
         public static ObservableCollection<WindowTimes> LoadReportsFromJson(string filepath, int filterByMinimumSeconds, List<string> groupingWindowTitlesBySubstring)
         {
@@ -240,14 +228,13 @@ namespace TimeFlyTrap.Monitoring
                 }
 
                 var jsonText = File.ReadAllText(filepath);
-                var tmpWrappedList = JsonConvert.DeserializeObject<WrapperForReportList>(jsonText);
+                var tmpWrappedList = JsonConvert.DeserializeObject<WindowTimes[]>(jsonText);
 
-                var tmplist = new ObservableCollection<WindowTimes>(tmpWrappedList.ListOfReports);
-                PopulateList(ref tmplist, filterByMinimumSeconds, groupingWindowTitlesBySubstring);
+                var tmpList = new ObservableCollection<WindowTimes>(tmpWrappedList);
+                PopulateList(ref tmpList, filterByMinimumSeconds, groupingWindowTitlesBySubstring);
 
-                return tmplist; /*new ObservableCollection<WindowsMonitor.WindowTimes>(
-                tmplist
-                .OrderBy(it => -it.TotalTimes.Sum(dateDur => dateDur.Value != DateTime.MinValue ? (dateDur.Value.Subtract(dateDur.Key).TotalSeconds) : 0)));*/
+                return new ObservableCollection<WindowTimes>(tmpList
+                    .OrderBy(it => -it.TotalTimes.Sum(dateDur => dateDur.Value != DateTime.MinValue ? (dateDur.Value.Subtract(dateDur.Key).TotalSeconds) : 0)));
             }
             catch (Exception exc)
             {
