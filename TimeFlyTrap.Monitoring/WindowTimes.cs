@@ -32,8 +32,6 @@ namespace TimeFlyTrap.Monitoring
         {
             get { return TotalTimes != null ? TotalTimes.Count : 0; }
         }
-        //public long IdleSeconds { get; set; }
-        //public long TotalSeconds { get; set; }
 
         public List<string> IdleTimeStrings
         {
@@ -69,8 +67,6 @@ namespace TimeFlyTrap.Monitoring
             ProcessPath = processPath;
             IdleTimes = new Dictionary<DateTime, DateTime>();
             TotalTimes = new Dictionary<DateTime, DateTime>();
-            //this.IdleSeconds = 0;
-            //this.TotalSeconds = 0;
         }
     }
 }

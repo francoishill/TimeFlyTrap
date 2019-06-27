@@ -28,14 +28,13 @@ namespace TimeFlyTrap.Monitoring
         private string _lastIdleWindowString;
         private bool _isBusy;
 
-        //private long idleoffset = 0;
         public WindowsMonitor(Action<string> onActiveWindowTitleChanged, Action<DateTime, TimeSpan> onLastinfoObtained = null)
         {
             _activatedWindowsAndTimes = new Dictionary<string, WindowTimes>(StringComparer.InvariantCultureIgnoreCase);
 
             _ticker = new Timer
             {
-                Interval = 500, //1000;
+                Interval = 500,
                 AutoReset = true
             };
 
@@ -46,84 +45,70 @@ namespace TimeFlyTrap.Monitoring
         {
             DateTime systemStartupTime;
             TimeSpan idleDuration;
-            if (Win32.GetLastInputInfo(out systemStartupTime, out idleDuration))
+
+            if (!Win32.GetLastInputInfo(out systemStartupTime, out idleDuration))
             {
-                if (onLastinfoObtained != null)
-                {
-                    onLastinfoObtained(systemStartupTime, idleDuration);
-                }
+                return;
+            }
 
-                if (_isBusy)
-                    return;
+            onLastinfoObtained?.Invoke(systemStartupTime, idleDuration);
 
-                _isBusy = true;
-                var now = DateTime.Now;
-                //IntPtr handle = GetForegroundWindow();
-                //if (handle != IntPtr.Zero)
-                //{
-                _activeWindowTitle = GetActiveWindowTitle() ?? NULL_WINDOW_TITLE;
-                _activeWindowModuleFilepath = GetActiveWindowModuleFilePath() ?? NULL_FILE_PATH;
-                _activeWindowString = _activeWindowTitle + "|" + _activeWindowModuleFilepath;
-                //if (activeWindowTitle != null && activeWindowModuleFilepath != null)
-                //{
+            if (_isBusy)
+            {
+                return;
+            }
 
-                //TransparentWindowActiveTitle.ShowWindow();
-                onActiveWindowTitleChanged("Active: " + _activeWindowTitle);
-
-                if (!_activatedWindowsAndTimes.ContainsKey(_activeWindowString))
-                    _activatedWindowsAndTimes.Add(_activeWindowString, new WindowTimes(_activeWindowTitle, _activeWindowModuleFilepath));
-                var winTimes = _activatedWindowsAndTimes[_activeWindowString];
-
-                if (!_activeWindowString.Equals(_lastWindowString, StringComparison.InvariantCultureIgnoreCase))
-                {
-                    //var lastTime = ActivatedWindowsAndTimes[lastWindowTitle].TotalTimes.Last().Key;
-                    //ActivatedWindowsAndTimes[lastWindowTitle].TotalTimes[lastTime] = now;
-                    //ActivatedWindowsAndTimes[lastWindowTitle].IdleTimes[lastTime] = now;
-
-                    _lastWindowString = _activeWindowString;
-
-                    winTimes.TotalTimes.Add(now, DateTime.MinValue);
-                    //if (ActivatedWindowsAndTimes.ContainsKey(_activeWindowString))
-                    //    idleoffset = ActivatedWindowsAndTimes[_activeWindowString].IdleSeconds;
-                }
-
-                //if (!ActivatedWindowsAndTimes.ContainsKey(_activeWindowString))
-                //    ActivatedWindowsAndTimes.Add(_activeWindowString, new WindowTimes(_activeWindowTitle, _activeWindowModuleFilepath));
-
-
-                var lastStartTime = winTimes.TotalTimes.Last().Key;
-                winTimes.TotalTimes[lastStartTime] = now; //(winTimes.TotalTimes[lastStartTime] ?? TimeSpan.FromMilliseconds(0)) + TimeSpan.FromMilliseconds(ticker.Interval);
-
-                if (idleDuration.TotalSeconds > _minimumIdleDuration.TotalSeconds)
-                {
-                    if (!_activeWindowString.Equals(_lastIdleWindowString, StringComparison.InvariantCultureIgnoreCase))
-                    {
-                        _lastIdleWindowString = _activeWindowString;
-                        winTimes.IdleTimes.Add(now.Subtract(idleDuration), DateTime.MinValue);
-                    }
-
-                    var lastIdleStart = winTimes.IdleTimes.Last().Key;
-                    winTimes.IdleTimes[lastIdleStart] = now; //(winTimes.IdleTimes[lastStartTime] ?? TimeSpan.FromMilliseconds(0)) + idleTime;
-                }
-                else
-                {
-                    //if (lastIdleWindowString != null)
-                    //{
-                    //    var idlestart = ActivatedWindowsAndTimes[lastIdleWindowString].IdleTimes.First().Key;
-                    //    ActivatedWindowsAndTimes[lastIdleWindowString].IdleTimes[idlestart] = now;
-                    //}
-                    _lastIdleWindowString = null;
-                }
-
-                //if (idleTime.TotalSeconds > 1)
-                //    ActivatedWindowsAndTimes[_activeWindowString].IdleSeconds = idleoffset + (long)idleTime.TotalSeconds;
-                //ActivatedWindowsAndTimes[_activeWindowString].TotalSeconds += (long)(ticker.Interval / (double)1000);
-
-                //}
-                //MessageBox.Show("Active window: " + GetActiveWindowTitle());
-                //}
-
+            _isBusy = true;
+            try
+            {
+                RecordMeasurement(onActiveWindowTitleChanged, idleDuration);
+            }
+            finally
+            {
                 _isBusy = false;
+            }
+        }
+
+        private void RecordMeasurement(Action<string> onActiveWindowTitleChanged, TimeSpan idleDuration)
+        {
+            var now = DateTime.Now;
+            _activeWindowTitle = GetActiveWindowTitle() ?? NULL_WINDOW_TITLE;
+            _activeWindowModuleFilepath = GetActiveWindowModuleFilePath() ?? NULL_FILE_PATH;
+            _activeWindowString = _activeWindowTitle + "|" + _activeWindowModuleFilepath;
+
+            onActiveWindowTitleChanged("Active: " + _activeWindowTitle);
+
+            if (!_activatedWindowsAndTimes.ContainsKey(_activeWindowString))
+            {
+                _activatedWindowsAndTimes.Add(_activeWindowString, new WindowTimes(_activeWindowTitle, _activeWindowModuleFilepath));
+            }
+
+            var winTimes = _activatedWindowsAndTimes[_activeWindowString];
+
+            if (!_activeWindowString.Equals(_lastWindowString, StringComparison.InvariantCultureIgnoreCase))
+            {
+                _lastWindowString = _activeWindowString;
+
+                winTimes.TotalTimes.Add(now, DateTime.MinValue);
+            }
+
+            var lastStartTime = winTimes.TotalTimes.Last().Key;
+            winTimes.TotalTimes[lastStartTime] = now;
+
+            if (idleDuration.TotalSeconds > _minimumIdleDuration.TotalSeconds)
+            {
+                if (!_activeWindowString.Equals(_lastIdleWindowString, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    _lastIdleWindowString = _activeWindowString;
+                    winTimes.IdleTimes.Add(now.Subtract(idleDuration), DateTime.MinValue);
+                }
+
+                var lastIdleStart = winTimes.IdleTimes.Last().Key;
+                winTimes.IdleTimes[lastIdleStart] = now;
+            }
+            else
+            {
+                _lastIdleWindowString = null;
             }
         }
 
@@ -248,8 +233,6 @@ namespace TimeFlyTrap.Monitoring
         {
             if (wintimes == null) return;
 
-            //var tmplist = tmpWrappedList.ListOfReports;
-            //var groupingLines = textboxGroupingOfWindowTitles.Text.Split(new char[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries);
             if (groupingWindowTitlesBySubstring != null)
                 foreach (var grp in groupingWindowTitlesBySubstring)
                 {
@@ -286,7 +269,6 @@ namespace TimeFlyTrap.Monitoring
                 throw new Exception("There are no reports to save");
             }
 
-            //Save report here via JSON
             if (File.Exists(jsonFilepath))
             {
                 File.Delete(jsonFilepath);
