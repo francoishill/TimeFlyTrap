@@ -1,9 +1,12 @@
 using System;
 using System.IO;
+using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Threading;
 using Microsoft.Win32;
+using TimeFlyTrap.WpfApp.Events;
 
 namespace TimeFlyTrap.WpfApp.ViewModel
 {
@@ -28,10 +31,19 @@ namespace TimeFlyTrap.WpfApp.ViewModel
         /// </summary>
         public MainViewModel()
         {
-            ChooseJsonFileDialogCommand = new RelayCommand(OnOpenDialog);
+            NotifyIcon = new NotifyIconViewModel();
+            
+            MessengerInstance.Register<ExitApplicationEvent>(this, OnExitApplication);
+            MessengerInstance.Register<ChooseJsonFileDialogEvent>(this, OnChooseJsonFileDialog);
         }
 
-        private void OnOpenDialog()
+        private void OnExitApplication(ExitApplicationEvent @event)
+        {
+            NotifyIcon.ShowNotifyIcon = false;
+            Application.Current.Shutdown();
+        }
+
+        private void OnChooseJsonFileDialog(ChooseJsonFileDialogEvent @event)
         {
             var initialDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TimeFlyTrap");
             if (!Directory.Exists(initialDir))
@@ -41,13 +53,15 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 
             var openFileDialog = new OpenFileDialog();
             openFileDialog.InitialDirectory = initialDir;
-            if (openFileDialog.ShowDialog() == true && File.Exists(openFileDialog.FileName))
+
+            if (openFileDialog.ShowDialog(Application.Current.MainWindow) == true 
+                && File.Exists(openFileDialog.FileName))
             {
                 Report = new ReportViewModel(openFileDialog.FileName);
             }
         }
 
-        public ICommand ChooseJsonFileDialogCommand { get; }
+        public NotifyIconViewModel NotifyIcon { get; }
 
         public ReportViewModel Report
         {
