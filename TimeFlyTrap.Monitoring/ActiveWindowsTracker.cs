@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace TimeFlyTrap.Monitoring
 {
-    public class WindowsMonitor
+    public class ActiveWindowsTracker
     {
         private const string NULL_WINDOW_TITLE = "[NULLWINDOWTITLE]";
         private const string NULL_FILE_PATH = "[NULLFILEPATH]";
@@ -28,7 +28,7 @@ namespace TimeFlyTrap.Monitoring
         private string _lastIdleWindowString;
         private bool _isBusy;
 
-        public WindowsMonitor(Action<string> onActiveWindowTitleChanged, Action<DateTime, TimeSpan> onLastinfoObtained = null)
+        public ActiveWindowsTracker(Action<string> onActiveWindowTitleChanged, Action<DateTime, TimeSpan> onLastinfoObtained = null)
         {
             _activatedWindowsAndTimes = new Dictionary<string, WindowTimes>(StringComparer.InvariantCultureIgnoreCase);
 

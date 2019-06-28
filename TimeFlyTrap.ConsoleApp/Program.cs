@@ -8,17 +8,17 @@ namespace TimeFlyTrap.ConsoleApp
 {
     class Program
     {
-        private static WindowsMonitor _monitor;
+        private static ActiveWindowsTracker _tracker;
 
         // ReSharper disable once ArrangeTypeMemberModifiers
         // ReSharper disable once UnusedParameter.Local
         static void Main(string[] args)
         {
-            _monitor = new WindowsMonitor(
+            _tracker = new ActiveWindowsTracker(
                 newTitle => { Console.WriteLine($"New title: {newTitle}"); },
                 (systemStartupTime, idleDuration) => { Console.WriteLine($"Startup: {systemStartupTime}, IdleDuration: {idleDuration}"); });
 
-            _monitor.StartTicker();
+            _tracker.StartTicker();
 
             Console.CancelKeyPress += ConsoleOnCancelKeyPress;
 
@@ -32,7 +32,7 @@ namespace TimeFlyTrap.ConsoleApp
 
         private static void ConsoleOnCancelKeyPress(object sender, ConsoleCancelEventArgs e)
         {
-            if (_monitor.StopAndGetReport(out var report))
+            if (_tracker.StopAndGetReport(out var report))
             {
                 var dir = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
@@ -46,7 +46,7 @@ namespace TimeFlyTrap.ConsoleApp
 
                 var filePathWithoutExtension = Path.Combine(dir, $"{DateTime.Now:yyyy-MM-dd HH_mm_ss}");
 
-                WindowsMonitor.SaveReportsToJsonAndHtml(
+                ActiveWindowsTracker.SaveReportsToJsonAndHtml(
                     new ObservableCollection<WindowTimes>(report.Values),
                     filePathWithoutExtension + ".json",
                     filePathWithoutExtension + ".html");

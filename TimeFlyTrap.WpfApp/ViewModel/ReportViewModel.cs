@@ -12,7 +12,7 @@ namespace TimeFlyTrap.WpfApp.ViewModel
         {
             const int tmpMinSecs = 1;
             var groupingWindowTitlesBySubstring = new List<string>();
-            var winTimes = WindowsMonitor.LoadReportsFromJson(filePath, tmpMinSecs, groupingWindowTitlesBySubstring);
+            var winTimes = ActiveWindowsTracker.LoadReportsFromJson(filePath, tmpMinSecs, groupingWindowTitlesBySubstring);
             ReportTimes = winTimes;
         }
 
