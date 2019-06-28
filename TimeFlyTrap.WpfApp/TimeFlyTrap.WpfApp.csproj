@@ -124,23 +124,27 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Constants.cs" />
     <Compile Include="Domain\Services\FileSystem\FileType.cs" />
     <Compile Include="Domain\Services\FileSystem\IAppFilePathProvider.cs" />
     <Compile Include="Domain\Services\FileSystem\IFileChooser.cs" />
     <Compile Include="Domain\Services\FileSystem\IFileChooserFactory.cs" />
     <Compile Include="Domain\Services\IAppManager.cs" />
+    <Compile Include="Domain\Services\IMainWindowProvider.cs" />
     <Compile Include="Domain\ViewModels\INotifyIconViewModel.cs" />
     <Compile Include="Domain\ViewModels\IReportViewModel.cs" />
     <Compile Include="Events\ChooseJsonFileDialogEvent.cs" />
-    <Compile Include="Events\ExitApplicationEvent.cs" />
+    <Compile Include="Events\MainWindowLoadedEvent.cs" />
     <Compile Include="Services\AppManager.cs" />
     <Compile Include="Services\FileSystem\FileChooser.cs" />
     <Compile Include="Services\FileSystem\FileChooserFactory.cs" />
     <Compile Include="Services\FileSystem\AppFilePathProvider.cs" />
+    <Compile Include="Services\MainWindowProvider.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NotifyIconViewModel.cs" />
     <Compile Include="ViewModel\ReportViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Page Include="DataTemplates\NotificationIcon.xaml" />
     <Page Include="DataTemplates\ReportTimes.xaml" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

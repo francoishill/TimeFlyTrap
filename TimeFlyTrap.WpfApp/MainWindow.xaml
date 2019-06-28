@@ -3,7 +3,6 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:tb="http://www.hardcodet.net/taskbar"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525"
         Icon="Images/tray_icon.ico"
@@ -12,37 +11,28 @@
         TextElement.Foreground="{DynamicResource MaterialDesignBody}"
         TextElement.FontWeight="Regular"
         TextElement.FontSize="13"
-        TextOptions.TextFormattingMode="Ideal" 
-        TextOptions.TextRenderingMode="Auto"        
+        TextOptions.TextFormattingMode="Ideal"
+        TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}">
+        FontFamily="{DynamicResource MaterialDesignFont}"
+        WindowState="Maximized"
+        Loaded="MainWindow_OnLoaded">
     <Grid>
 
-        <tb:TaskbarIcon
-            Visibility="{Binding NotifyIcon.ShowNotifyIcon, Converter={StaticResource BooleanToVisibilityConverter}}"
-            ToolTipText="Fallback ToolTip for Windows xp"
-            IconSource="Images/tray_icon.ico"
-            MenuActivation="LeftOrRightClick"
-            PopupActivation="DoubleClick">
-            <tb:TaskbarIcon.ContextMenu>
-                <ContextMenu>
-                    <MenuItem Header="Open _Report" Command="{Binding NotifyIcon.ChooseJsonFileDialogCommand}" />
-                    <MenuItem Header="E_xit" Command="{Binding NotifyIcon.ExitCommand}" />
-                </ContextMenu>
-            </tb:TaskbarIcon.ContextMenu>
-            <tb:TaskbarIcon.TrayPopup>
-                <Popup></Popup>
-            </tb:TaskbarIcon.TrayPopup>
-            <tb:TaskbarIcon.TrayToolTip>
-                <ToolTip></ToolTip>
-            </tb:TaskbarIcon.TrayToolTip>
-        </tb:TaskbarIcon>
+        <Grid.Resources>
+            <ResourceDictionary>
+                <ResourceDictionary.MergedDictionaries>
+                    <ResourceDictionary Source="DataTemplates/ReportTimes.xaml" />
+                    <ResourceDictionary Source="DataTemplates/NotificationIcon.xaml" />
+                </ResourceDictionary.MergedDictionaries>
+            </ResourceDictionary>
+        </Grid.Resources>
+
+        <ContentControl 
+            Content="{Binding NotifyIcon}"
+            ContentTemplate="{StaticResource NotifyIconTemplate}"/>
 
         <DockPanel>
-
-            <DockPanel.Resources>
-                <ResourceDictionary Source="DataTemplates/ReportTimes.xaml" />
-            </DockPanel.Resources>
 
             <Button
                 DockPanel.Dock="Top"
@@ -51,13 +41,32 @@
                 Open File
             </Button>
 
-            <ListBox
-                Margin="0 20 0 0"
-                Padding='10'
-                FontSize='22'
-                ScrollViewer.CanContentScroll='False'
-                ItemsSource="{Binding Report.ReportTimes}"
-                ItemTemplate="{StaticResource ReportTimesListBoxItem}" />
+            <Grid Margin="0 20 0 0">
+
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" MinWidth="100" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="3*" MinWidth="100" />
+                </Grid.ColumnDefinitions>
+
+                <Grid Grid.Column="0">
+                    <TextBlock Text="TODO: Logs should go here" />
+                </Grid>
+
+                <GridSplitter
+                    Grid.Column="1"
+                    ResizeDirection="Columns"
+                    VerticalAlignment="Stretch"
+                    HorizontalAlignment="Center"
+                    Width="10"
+                    ShowsPreview="true" />
+                
+                <ContentControl
+                    Grid.Column="2"
+                    Content="{Binding Report}"
+                    ContentTemplate="{StaticResource ReportControl}"/>
+
+            </Grid>
 
         </DockPanel>
 

@@ -1,17 +1,19 @@
 using System;
 using System.IO;
-using System.Windows;
 using Microsoft.Win32;
+using TimeFlyTrap.WpfApp.Domain.Services;
 using TimeFlyTrap.WpfApp.Domain.Services.FileSystem;
 
 namespace TimeFlyTrap.WpfApp.Services.FileSystem
 {
     public class FileChooser : IFileChooser
     {
+        private readonly IMainWindowProvider _mainWindowProvider;
         private readonly IAppFilePathProvider _appFilePathProvider;
 
-        public FileChooser(IAppFilePathProvider appFilePathProvider)
+        public FileChooser(IMainWindowProvider mainWindowProvider, IAppFilePathProvider appFilePathProvider)
         {
+            _mainWindowProvider = mainWindowProvider;
             _appFilePathProvider = appFilePathProvider;
         }
 
@@ -27,7 +29,7 @@ namespace TimeFlyTrap.WpfApp.Services.FileSystem
 
             ChosenFile = null;
 
-            var result = openFileDialog.ShowDialog(Application.Current.MainWindow);
+            var result = openFileDialog.ShowDialog(_mainWindowProvider.Window);
             if (result == true)
             {
                 ChosenFile = openFileDialog.FileName;

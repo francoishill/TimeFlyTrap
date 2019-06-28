@@ -28,7 +28,9 @@ namespace TimeFlyTrap.WpfApp
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
 
-            MainViewModel.ServiceProvider = serviceCollection.BuildServiceProvider();
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            TimeFlyTrap.WpfApp.MainWindow.ServiceProvider = serviceProvider;
+            MainViewModel.ServiceProvider = serviceProvider;
         }
 
         private static void ConfigureServices(IServiceCollection services)
@@ -36,6 +38,8 @@ namespace TimeFlyTrap.WpfApp
             services.AddSingleton<IMessenger>(Messenger.Default);
 
             services.AddTransient<IAppManager, AppManager>();
+            services.AddTransient<IMainWindowProvider, MainWindowProvider>();
+
             services.AddTransient<IAppFilePathProvider, AppFilePathProvider>();
             services.AddTransient<IFileChooserFactory, FileChooserFactory>();
 

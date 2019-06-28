@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Messaging;
 using TimeFlyTrap.Monitoring;
+using TimeFlyTrap.WpfApp.Domain.Services;
 using TimeFlyTrap.WpfApp.Domain.Services.FileSystem;
 using TimeFlyTrap.WpfApp.Domain.ViewModels;
 using TimeFlyTrap.WpfApp.Events;
@@ -13,11 +14,13 @@ namespace TimeFlyTrap.WpfApp.ViewModel
     public class ReportViewModel : ViewModelBase, IReportViewModel
     {
         private readonly IFileChooserFactory _fileChooserFactory;
+        private readonly IAppManager _appManager;
         private ICollection<WindowTimes> _reportTimes;
 
-        public ReportViewModel(IMessenger messenger, IFileChooserFactory fileChooserFactory)
+        public ReportViewModel(IMessenger messenger, IFileChooserFactory fileChooserFactory, IAppManager appManager)
         {
             _fileChooserFactory = fileChooserFactory;
+            _appManager = appManager;
 
             messenger.Register<ChooseJsonFileDialogEvent>(this, OnChooseJsonFileDialog);
         }
@@ -34,6 +37,8 @@ namespace TimeFlyTrap.WpfApp.ViewModel
             var groupingWindowTitlesBySubstring = new List<string>();
             var winTimes = ActiveWindowsTracker.LoadReportsFromJson(fileChooser.ChosenFile, tmpMinSecs, groupingWindowTitlesBySubstring);
             ReportTimes = winTimes;
+
+            _appManager.ShowMainWindow();
         }
 
         public ICollection<WindowTimes> ReportTimes

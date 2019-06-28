@@ -1,6 +1,8 @@
-<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:monitoring="clr-namespace:TimeFlyTrap.Monitoring;assembly=TimeFlyTrap.Monitoring">
+<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:monitoring="clr-namespace:TimeFlyTrap.Monitoring;assembly=TimeFlyTrap.Monitoring"
+    xmlns:viewModel="clr-namespace:TimeFlyTrap.WpfApp.ViewModel">
 
     <DataTemplate x:Key="ReportTimesListBoxItem" DataType="monitoring:WindowTimes">
         <Border Padding='10'
@@ -51,6 +53,14 @@
                 </StackPanel>
             </StackPanel>
         </Border>
+    </DataTemplate>
+
+    <DataTemplate x:Key="ReportControl" DataType="viewModel:ReportViewModel">
+        <ListBox
+            FontSize='22'
+            ScrollViewer.CanContentScroll='False'
+            ItemsSource="{Binding ReportTimes}"
+            ItemTemplate="{StaticResource ReportTimesListBoxItem}" />
     </DataTemplate>
 
 </ResourceDictionary>

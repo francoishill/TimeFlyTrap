@@ -30,8 +30,6 @@ namespace TimeFlyTrap.WpfApp.ViewModel
     {
         public static IServiceProvider ServiceProvider { get; set; }
 
-        private readonly IAppManager _appManager;
-
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
@@ -41,23 +39,12 @@ namespace TimeFlyTrap.WpfApp.ViewModel
             {
                 var serviceProvider = scope.ServiceProvider;
 
-                _appManager = serviceProvider.GetRequiredService<IAppManager>();
-
                 NotifyIcon = serviceProvider.GetRequiredService<INotifyIconViewModel>();
                 Report = serviceProvider.GetRequiredService<IReportViewModel>();
-
-                var messenger = serviceProvider.GetRequiredService<IMessenger>();
-                messenger.Register<ExitApplicationEvent>(this, OnExitApplication);
             }
         }
 
         public INotifyIconViewModel NotifyIcon { get; }
         public IReportViewModel Report { get; }
-
-        private void OnExitApplication(ExitApplicationEvent @event)
-        {
-            NotifyIcon.ShowNotifyIcon = false;
-            _appManager.ShutDown();
-        }
     }
 }
