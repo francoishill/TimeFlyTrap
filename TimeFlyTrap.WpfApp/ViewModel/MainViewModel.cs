@@ -42,6 +42,8 @@ namespace TimeFlyTrap.WpfApp.ViewModel
                 NotifyIcon = serviceProvider.GetRequiredService<INotifyIconViewModel>();
                 Report = serviceProvider.GetRequiredService<IReportViewModel>();
                 ActiveWindowTracker = serviceProvider.GetRequiredService<IActiveWindowTrackerViewModel>();
+
+                ActiveWindowTracker.StartTracking();
             }
         }
 

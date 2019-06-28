@@ -8,12 +8,36 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 {
     public class ActiveWindowTrackerViewModel : ViewModelBase, IActiveWindowTrackerViewModel
     {
+        private readonly IActiveWindowsTracker _activeWindowsTracker;
         private readonly object _logLinesLock = new object();
         private readonly Queue<string> _logLines = new Queue<string>();
 
         public ActiveWindowTrackerViewModel(IActiveWindowsTracker activeWindowsTracker)
         {
-            activeWindowsTracker.StartTicker(new TrackingListener(this));
+            _activeWindowsTracker = activeWindowsTracker;
+        }
+
+        // ReSharper disable once InconsistentlySynchronizedField
+        public string LogText => string.Join(Environment.NewLine, _logLines);
+
+        public void StartTracking()
+        {
+            _activeWindowsTracker.StartTicker(new TrackingListener(this));
+        }
+
+        private void AppendLine(string text)
+        {
+            lock (_logLinesLock)
+            {
+                _logLines.Enqueue(text);
+
+                while (_logLines.Count > Constants.MAX_LOG_LINES)
+                {
+                    _logLines.Dequeue();
+                }
+
+                RaisePropertyChanged(nameof(LogText));
+            }
         }
 
         private class TrackingListener : ITrackingListener
@@ -35,22 +59,5 @@ namespace TimeFlyTrap.WpfApp.ViewModel
                 _viewModel.AppendLine($"New title: {@event.Title}, Module: {@event.ModuleFilePath}");
             }
         }
-
-        private void AppendLine(string text)
-        {
-            lock (_logLinesLock)
-            {
-                _logLines.Enqueue(text);
-
-                while (_logLines.Count > Constants.MAX_LOG_LINES)
-                {
-                    _logLines.Dequeue();
-                }
-
-                RaisePropertyChanged(nameof(LogText));
-            }
-        }
-
-        public string LogText => string.Join(Environment.NewLine, _logLines);
     }
 }

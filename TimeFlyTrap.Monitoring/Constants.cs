@@ -4,6 +4,6 @@ namespace TimeFlyTrap.Monitoring
 {
     public class Constants
     {
-        public static readonly TimeSpan TICKER_INTERVAL = TimeSpan.FromSeconds(2);
+        public static readonly TimeSpan TickerInterval = TimeSpan.FromSeconds(2);
     }
 }

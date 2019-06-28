@@ -34,7 +34,7 @@ namespace TimeFlyTrap.Monitoring
 
             _ticker = new Timer
             {
-                Interval = Constants.TICKER_INTERVAL.TotalMilliseconds,
+                Interval = Constants.TickerInterval.TotalMilliseconds,
                 AutoReset = true
             };
         }
