@@ -29,23 +29,39 @@
             </ResourceDictionary>
         </Grid.Resources>
 
-        <ContentControl 
+        <ContentControl
             Content="{Binding NotifyIcon}"
-            ContentTemplate="{StaticResource NotifyIconTemplate}"/>
+            ContentTemplate="{StaticResource NotifyIconTemplate}" />
 
         <DockPanel>
 
-            <Button
-                DockPanel.Dock="Top"
-                Command="{Binding NotifyIcon.ChooseJsonFileDialogCommand}"
-                VerticalAlignment="Top">
-                Open File
-            </Button>
+            <WrapPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <WrapPanel.Resources>
+                    <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                        <Setter Property="Margin" Value="20 0 0 0" />
+                    </Style>
+                </WrapPanel.Resources>
+
+                <Button
+                    DockPanel.Dock="Bottom"
+                    Command="{Binding NotifyIcon.ChooseJsonFileDialogCommand}"
+                    VerticalAlignment="Top">
+                    Open File
+                </Button>
+
+                <Button
+                    DockPanel.Dock="Bottom"
+                    Command="{Binding NotifyIcon.ShowCurrentReportCommand}"
+                    VerticalAlignment="Top">
+                    Current Report
+                </Button>
+
+            </WrapPanel>
 
             <Grid Margin="0 20 0 0">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="3*" MinWidth="100" />
+                    <ColumnDefinition Width="*" MinWidth="100" />
                     <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="*" MinWidth="100" />
                 </Grid.ColumnDefinitions>
@@ -53,7 +69,7 @@
                 <ContentControl
                     Grid.Column="0"
                     Content="{Binding ActiveWindowTracker}"
-                    ContentTemplate="{StaticResource ActiveWindowTrackerControl}"/>
+                    ContentTemplate="{StaticResource ActiveWindowTrackerControl}" />
 
                 <GridSplitter
                     Grid.Column="1"
@@ -62,11 +78,11 @@
                     HorizontalAlignment="Center"
                     Width="10"
                     ShowsPreview="true" />
-                
+
                 <ContentControl
                     Grid.Column="2"
                     Content="{Binding Report}"
-                    ContentTemplate="{StaticResource ReportControl}"/>
+                    ContentTemplate="{StaticResource ReportControl}" />
 
             </Grid>
 

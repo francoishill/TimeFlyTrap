@@ -136,6 +136,7 @@
     <Compile Include="Domain\ViewModels\IReportViewModel.cs" />
     <Compile Include="Events\ChooseJsonFileDialogEvent.cs" />
     <Compile Include="Events\MainWindowLoadedEvent.cs" />
+    <Compile Include="Events\ShowCurrentReportEvent.cs" />
     <Compile Include="Services\AppManager.cs" />
     <Compile Include="Services\FileSystem\FileChooser.cs" />
     <Compile Include="Services\FileSystem\FileChooserFactory.cs" />

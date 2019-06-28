@@ -15,14 +15,21 @@ namespace TimeFlyTrap.WpfApp.ViewModel
     {
         private readonly IFileChooserFactory _fileChooserFactory;
         private readonly IAppManager _appManager;
+        private readonly IActiveWindowsTracker _activeWindowsTracker;
         private ICollection<WindowTimes> _reportTimes;
 
-        public ReportViewModel(IMessenger messenger, IFileChooserFactory fileChooserFactory, IAppManager appManager)
+        public ReportViewModel(
+            IMessenger messenger,
+            IFileChooserFactory fileChooserFactory,
+            IAppManager appManager,
+            IActiveWindowsTracker activeWindowsTracker)
         {
             _fileChooserFactory = fileChooserFactory;
             _appManager = appManager;
+            _activeWindowsTracker = activeWindowsTracker;
 
             messenger.Register<ChooseJsonFileDialogEvent>(this, OnChooseJsonFileDialog);
+            messenger.Register<ShowCurrentReportEvent>(this, OnShowCurrentReport);
         }
 
         public void OnChooseJsonFileDialog(ChooseJsonFileDialogEvent @event)
@@ -39,6 +46,14 @@ namespace TimeFlyTrap.WpfApp.ViewModel
             ReportTimes = winTimes;
 
             _appManager.ShowMainWindow();
+        }
+
+        private void OnShowCurrentReport(ShowCurrentReportEvent @event)
+        {
+            if (_activeWindowsTracker.GetReport(out var activeWindowsList))
+            {
+                ReportTimes = activeWindowsList.Values;
+            }
         }
 
         public ICollection<WindowTimes> ReportTimes

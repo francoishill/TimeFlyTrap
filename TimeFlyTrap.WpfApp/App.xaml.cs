@@ -48,7 +48,7 @@ namespace TimeFlyTrap.WpfApp
             services.AddTransient<IReportViewModel, ReportViewModel>();
             services.AddTransient<IActiveWindowTrackerViewModel, ActiveWindowTrackerViewModel>();
             
-            services.AddTransient<IActiveWindowsTracker, ActiveWindowsTracker>();
+            services.AddSingleton<IActiveWindowsTracker, ActiveWindowsTracker>();
         }
     }
 }
