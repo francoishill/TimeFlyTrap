@@ -21,7 +21,7 @@ namespace TimeFlyTrap.WpfApp.Services.FileSystem
         {
             var openFileDialog = new OpenFileDialog
             {
-                InitialDirectory = _appFilePathProvider.LocalAppData(),
+                InitialDirectory = _appFilePathProvider.LocalAppData,
                 Filter = FileFilterFromType(fileType),
                 CheckFileExists = true,
                 CheckPathExists = true,

@@ -8,6 +8,7 @@ using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
+using TimeFlyTrap.WpfApp.Domain;
 using TimeFlyTrap.WpfApp.Domain.Services;
 using TimeFlyTrap.WpfApp.Domain.ViewModels;
 using TimeFlyTrap.WpfApp.Events;
@@ -40,6 +41,7 @@ namespace TimeFlyTrap.WpfApp.ViewModel
                 var serviceProvider = scope.ServiceProvider;
 
                 NotifyIcon = serviceProvider.GetRequiredService<INotifyIconViewModel>();
+                Settings = serviceProvider.GetRequiredService<ISettingsViewModel>();
                 Report = serviceProvider.GetRequiredService<IReportViewModel>();
                 ActiveWindowTracker = serviceProvider.GetRequiredService<IActiveWindowTrackerViewModel>();
 
@@ -48,6 +50,7 @@ namespace TimeFlyTrap.WpfApp.ViewModel
         }
 
         public INotifyIconViewModel NotifyIcon { get; }
+        public ISettingsViewModel Settings { get; }
         public IReportViewModel Report { get; }
         public IActiveWindowTrackerViewModel ActiveWindowTracker { get; }
     }

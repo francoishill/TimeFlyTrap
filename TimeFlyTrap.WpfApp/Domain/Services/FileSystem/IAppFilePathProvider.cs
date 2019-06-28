@@ -2,6 +2,7 @@ namespace TimeFlyTrap.WpfApp.Domain.Services.FileSystem
 {
     public interface IAppFilePathProvider
     {
-        string LocalAppData();
+        string LocalAppData { get; }
+        string SettingsFilePath { get; }
     }
 }
