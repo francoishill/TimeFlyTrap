@@ -4,8 +4,12 @@ using System.Windows;
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
+using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Win32;
+using TimeFlyTrap.WpfApp.Domain.Services;
+using TimeFlyTrap.WpfApp.Domain.ViewModels;
 using TimeFlyTrap.WpfApp.Events;
 
 namespace TimeFlyTrap.WpfApp.ViewModel
@@ -24,55 +28,36 @@ namespace TimeFlyTrap.WpfApp.ViewModel
     /// </summary>
     public class MainViewModel : ViewModelBase
     {
-        private ReportViewModel m_Report;
+        public static IServiceProvider ServiceProvider { get; set; }
+
+        private readonly IAppManager _appManager;
 
         /// <summary>
         /// Initializes a new instance of the MainViewModel class.
         /// </summary>
         public MainViewModel()
         {
-            NotifyIcon = new NotifyIconViewModel();
-            
-            MessengerInstance.Register<ExitApplicationEvent>(this, OnExitApplication);
-            MessengerInstance.Register<ChooseJsonFileDialogEvent>(this, OnChooseJsonFileDialog);
+            using (var scope = ServiceProvider.CreateScope())
+            {
+                var serviceProvider = scope.ServiceProvider;
+
+                _appManager = serviceProvider.GetRequiredService<IAppManager>();
+
+                NotifyIcon = serviceProvider.GetRequiredService<INotifyIconViewModel>();
+                Report = serviceProvider.GetRequiredService<IReportViewModel>();
+
+                var messenger = serviceProvider.GetRequiredService<IMessenger>();
+                messenger.Register<ExitApplicationEvent>(this, OnExitApplication);
+            }
         }
+
+        public INotifyIconViewModel NotifyIcon { get; }
+        public IReportViewModel Report { get; }
 
         private void OnExitApplication(ExitApplicationEvent @event)
         {
             NotifyIcon.ShowNotifyIcon = false;
-            Application.Current.Shutdown();
-        }
-
-        private void OnChooseJsonFileDialog(ChooseJsonFileDialogEvent @event)
-        {
-            var initialDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TimeFlyTrap");
-            if (!Directory.Exists(initialDir))
-            {
-                Directory.CreateDirectory(initialDir);
-            }
-
-            var openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = initialDir;
-
-            if (openFileDialog.ShowDialog(Application.Current.MainWindow) == true 
-                && File.Exists(openFileDialog.FileName))
-            {
-                Report = new ReportViewModel(openFileDialog.FileName);
-            }
-        }
-
-        public NotifyIconViewModel NotifyIcon { get; }
-
-        public ReportViewModel Report
-        {
-            get => m_Report;
-            set
-            {
-                if (m_Report == value) return;
-
-                m_Report = value;
-                RaisePropertyChanged(nameof(Report));
-            }
+            _appManager.ShutDown();
         }
     }
 }

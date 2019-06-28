@@ -1,13 +1,24 @@
 using System.Windows.Input;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
+using GalaSoft.MvvmLight.Messaging;
+using TimeFlyTrap.WpfApp.Domain.ViewModels;
 using TimeFlyTrap.WpfApp.Events;
 
 namespace TimeFlyTrap.WpfApp.ViewModel
 {
-    public class NotifyIconViewModel : ViewModelBase
+    public class NotifyIconViewModel : ViewModelBase, INotifyIconViewModel
     {
+        private readonly IMessenger _messenger;
         private bool _showNotifyIcon = true;
+
+        public NotifyIconViewModel(IMessenger messenger)
+        {
+            _messenger = messenger;
+
+            ChooseJsonFileDialogCommand = new RelayCommand(OnChooseJsonFileDialog);
+            ExitCommand = new RelayCommand(OnExit);
+        }
 
         public bool ShowNotifyIcon
         {
@@ -23,20 +34,14 @@ namespace TimeFlyTrap.WpfApp.ViewModel
         public ICommand ChooseJsonFileDialogCommand { get; }
         public ICommand ExitCommand { get; }
 
-        public NotifyIconViewModel()
-        {
-            ChooseJsonFileDialogCommand = new RelayCommand(OnChooseJsonFileDialog);
-            ExitCommand = new RelayCommand(OnExit);
-        }
-
         private void OnChooseJsonFileDialog()
         {
-            MessengerInstance.Send(new ChooseJsonFileDialogEvent());
+            _messenger.Send(new ChooseJsonFileDialogEvent());
         }
 
         private void OnExit()
         {
-            MessengerInstance.Send(new ExitApplicationEvent());
+            _messenger.Send(new ExitApplicationEvent());
         }
     }
 }

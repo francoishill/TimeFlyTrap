@@ -1,4 +1,6 @@
 namespace TimeFlyTrap.WpfApp.Events
 {
-    public class ChooseJsonFileDialogEvent{}
+    public class ChooseJsonFileDialogEvent
+    {
+    }
 }
