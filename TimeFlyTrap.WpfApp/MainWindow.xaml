@@ -24,6 +24,7 @@
                 <ResourceDictionary.MergedDictionaries>
                     <ResourceDictionary Source="DataTemplates/ReportTimes.xaml" />
                     <ResourceDictionary Source="DataTemplates/NotificationIcon.xaml" />
+                    <ResourceDictionary Source="DataTemplates/ActiveWindowTracker.xaml" />
                 </ResourceDictionary.MergedDictionaries>
             </ResourceDictionary>
         </Grid.Resources>
@@ -44,14 +45,15 @@
             <Grid Margin="0 20 0 0">
 
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*" MinWidth="100" />
-                    <ColumnDefinition Width="10" />
                     <ColumnDefinition Width="3*" MinWidth="100" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="*" MinWidth="100" />
                 </Grid.ColumnDefinitions>
 
-                <Grid Grid.Column="0">
-                    <TextBlock Text="TODO: Logs should go here" />
-                </Grid>
+                <ContentControl
+                    Grid.Column="0"
+                    Content="{Binding ActiveWindowTracker}"
+                    ContentTemplate="{StaticResource ActiveWindowTrackerControl}"/>
 
                 <GridSplitter
                     Grid.Column="1"

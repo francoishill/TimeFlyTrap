@@ -63,7 +63,7 @@ namespace TimeFlyTrap.Monitoring
             return true;
         }
 
-        public static string GetProcessOfWindowHandle(IntPtr windowHandle)
+        public static string GetWindowProcessFilePath(IntPtr windowHandle)
         {
             uint pid;
             GetWindowThreadProcessId(windowHandle, out pid);

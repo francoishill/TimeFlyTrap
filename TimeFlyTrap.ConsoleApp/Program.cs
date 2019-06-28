@@ -14,11 +14,9 @@ namespace TimeFlyTrap.ConsoleApp
         // ReSharper disable once UnusedParameter.Local
         static void Main(string[] args)
         {
-            _tracker = new ActiveWindowsTracker(
-                newTitle => { Console.WriteLine($"New title: {newTitle}"); },
-                (systemStartupTime, idleDuration) => { Console.WriteLine($"Startup: {systemStartupTime}, IdleDuration: {idleDuration}"); });
+            _tracker = new ActiveWindowsTracker();
 
-            _tracker.StartTicker();
+            _tracker.StartTicker(new TrackingListener());
 
             Console.CancelKeyPress += ConsoleOnCancelKeyPress;
 
@@ -28,6 +26,19 @@ namespace TimeFlyTrap.ConsoleApp
             }
 
             // ReSharper disable once FunctionNeverReturns
+        }
+
+        private class TrackingListener : ITrackingListener
+        {
+            public void OnLastInfo(OnLastInfoEvent @event)
+            {
+                Console.WriteLine($"Startup: {@event.SystemStartupTime}, IdleDuration: {@event.IdleDuration}");
+            }
+
+            public void OnActiveWindowInfo(OnActiveWindowInfoEvent @event)
+            {
+                Console.WriteLine($"New title: {@event.Title}, Module: {@event.ModuleFilePath}");
+            }
         }
 
         private static void ConsoleOnCancelKeyPress(object sender, ConsoleCancelEventArgs e)

@@ -2,6 +2,7 @@
 using GalaSoft.MvvmLight.Messaging;
 using GalaSoft.MvvmLight.Threading;
 using Microsoft.Extensions.DependencyInjection;
+using TimeFlyTrap.Monitoring;
 using TimeFlyTrap.WpfApp.Domain.Services;
 using TimeFlyTrap.WpfApp.Domain.Services.FileSystem;
 using TimeFlyTrap.WpfApp.Domain.ViewModels;
@@ -45,6 +46,9 @@ namespace TimeFlyTrap.WpfApp
 
             services.AddTransient<INotifyIconViewModel, NotifyIconViewModel>();
             services.AddTransient<IReportViewModel, ReportViewModel>();
+            services.AddTransient<IActiveWindowTrackerViewModel, ActiveWindowTrackerViewModel>();
+            
+            services.AddTransient<IActiveWindowsTracker, ActiveWindowsTracker>();
         }
     }
 }

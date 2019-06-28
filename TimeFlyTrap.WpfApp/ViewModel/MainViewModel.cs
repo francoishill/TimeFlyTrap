@@ -41,10 +41,12 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 
                 NotifyIcon = serviceProvider.GetRequiredService<INotifyIconViewModel>();
                 Report = serviceProvider.GetRequiredService<IReportViewModel>();
+                ActiveWindowTracker = serviceProvider.GetRequiredService<IActiveWindowTrackerViewModel>();
             }
         }
 
         public INotifyIconViewModel NotifyIcon { get; }
         public IReportViewModel Report { get; }
+        public IActiveWindowTrackerViewModel ActiveWindowTracker { get; }
     }
 }

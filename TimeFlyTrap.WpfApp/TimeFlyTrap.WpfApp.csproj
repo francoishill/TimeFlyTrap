@@ -131,6 +131,7 @@
     <Compile Include="Domain\Services\FileSystem\IFileChooserFactory.cs" />
     <Compile Include="Domain\Services\IAppManager.cs" />
     <Compile Include="Domain\Services\IMainWindowProvider.cs" />
+    <Compile Include="Domain\ViewModels\IActiveWindowTrackerViewModel.cs" />
     <Compile Include="Domain\ViewModels\INotifyIconViewModel.cs" />
     <Compile Include="Domain\ViewModels\IReportViewModel.cs" />
     <Compile Include="Events\ChooseJsonFileDialogEvent.cs" />
@@ -140,10 +141,13 @@
     <Compile Include="Services\FileSystem\FileChooserFactory.cs" />
     <Compile Include="Services\FileSystem\AppFilePathProvider.cs" />
     <Compile Include="Services\MainWindowProvider.cs" />
+    <Compile Include="ViewModel\ActiveWindowTrackerViewModel.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NotifyIconViewModel.cs" />
     <Compile Include="ViewModel\ReportViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
+    <Compile Include="WpfUtils\TextBoxUtilities.cs" />
+    <Page Include="DataTemplates\ActiveWindowTracker.xaml" />
     <Page Include="DataTemplates\NotificationIcon.xaml" />
     <Page Include="DataTemplates\ReportTimes.xaml" />
     <Page Include="MainWindow.xaml">

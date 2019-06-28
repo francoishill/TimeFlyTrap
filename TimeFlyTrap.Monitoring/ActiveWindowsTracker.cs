@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 namespace TimeFlyTrap.Monitoring
 {
-    public class ActiveWindowsTracker
+    public class ActiveWindowsTracker : IActiveWindowsTracker
     {
         private const string NULL_WINDOW_TITLE = "[NULLWINDOWTITLE]";
         private const string NULL_FILE_PATH = "[NULLFILEPATH]";
@@ -28,20 +28,31 @@ namespace TimeFlyTrap.Monitoring
         private string _lastIdleWindowString;
         private bool _isBusy;
 
-        public ActiveWindowsTracker(Action<string> onActiveWindowTitleChanged, Action<DateTime, TimeSpan> onLastinfoObtained = null)
+        public ActiveWindowsTracker()
         {
             _activatedWindowsAndTimes = new Dictionary<string, WindowTimes>(StringComparer.InvariantCultureIgnoreCase);
 
             _ticker = new Timer
             {
-                Interval = 500,
+                Interval = Constants.TICKER_INTERVAL.TotalMilliseconds,
                 AutoReset = true
             };
-
-            _ticker.Elapsed += delegate { OnTicker(onActiveWindowTitleChanged, onLastinfoObtained); };
         }
 
-        private void OnTicker(Action<string> onActiveWindowTitleChanged, Action<DateTime, TimeSpan> onLastinfoObtained)
+        public void StartTicker(ITrackingListener trackingListener)
+        {
+            if (_tickerRunning)
+            {
+                throw new InvalidOperationException("Cannot call StartTicker more than once");
+            }
+
+            _ticker.Elapsed += delegate { OnTicker(trackingListener); };
+
+            _ticker.Start();
+            _tickerRunning = true;
+        }
+
+        private void OnTicker(ITrackingListener trackingListener)
         {
             DateTime systemStartupTime;
             TimeSpan idleDuration;
@@ -51,7 +62,7 @@ namespace TimeFlyTrap.Monitoring
                 return;
             }
 
-            onLastinfoObtained?.Invoke(systemStartupTime, idleDuration);
+            trackingListener.OnLastInfo(new OnLastInfoEvent(systemStartupTime, idleDuration));
 
             if (_isBusy)
             {
@@ -61,7 +72,7 @@ namespace TimeFlyTrap.Monitoring
             _isBusy = true;
             try
             {
-                RecordMeasurement(onActiveWindowTitleChanged, idleDuration);
+                RecordMeasurement(trackingListener, idleDuration);
             }
             finally
             {
@@ -69,14 +80,14 @@ namespace TimeFlyTrap.Monitoring
             }
         }
 
-        private void RecordMeasurement(Action<string> onActiveWindowTitleChanged, TimeSpan idleDuration)
+        private void RecordMeasurement(ITrackingListener trackingListener, TimeSpan idleDuration)
         {
             var now = DateTime.Now;
             _activeWindowTitle = GetActiveWindowTitle() ?? NULL_WINDOW_TITLE;
             _activeWindowModuleFilepath = GetActiveWindowModuleFilePath() ?? NULL_FILE_PATH;
             _activeWindowString = _activeWindowTitle + "|" + _activeWindowModuleFilepath;
 
-            onActiveWindowTitleChanged("Active: " + _activeWindowTitle);
+            trackingListener.OnActiveWindowInfo(new OnActiveWindowInfoEvent(_activeWindowTitle, _activeWindowModuleFilepath));
 
             if (!_activatedWindowsAndTimes.ContainsKey(_activeWindowString))
             {
@@ -110,12 +121,6 @@ namespace TimeFlyTrap.Monitoring
             {
                 _lastIdleWindowString = null;
             }
-        }
-
-        public void StartTicker()
-        {
-            _ticker.Start();
-            _tickerRunning = true;
         }
 
         public void Stop()
@@ -156,11 +161,6 @@ namespace TimeFlyTrap.Monitoring
             return GetReport(out activatedWindowsList);
         }
 
-        public void Restart()
-        {
-            StartTicker();
-        }
-
         public bool GetReport(out Dictionary<string, WindowTimes> activeWindowsList)
         {
             activeWindowsList = _activatedWindowsAndTimes
@@ -185,17 +185,17 @@ namespace TimeFlyTrap.Monitoring
 
         public static string GetActiveWindowModuleFilePath()
         {
-            const int nChars = 256;
             IntPtr handle;
-            var buff = new StringBuilder(nChars);
             handle = Win32.GetForegroundWindow();
 
-            var file = Win32.GetProcessOfWindowHandle(handle);
+            var file = Win32.GetWindowProcessFilePath(handle);
             if (!string.IsNullOrWhiteSpace(file))
             {
                 return file;
             }
 
+            const int nChars = 256;
+            var buff = new StringBuilder(nChars);
             if (Win32.GetWindowModuleFileName(handle, buff, nChars) > 0)
             {
                 return buff.ToString();
