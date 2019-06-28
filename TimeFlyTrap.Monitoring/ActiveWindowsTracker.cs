@@ -141,6 +141,7 @@ namespace TimeFlyTrap.Monitoring
                     wintimes.TotalTimes[lastTime] = now;
                 }
             }
+
             _lastWindowString = null;
 
             if (_lastIdleWindowString != null && _activatedWindowsAndTimes.ContainsKey(_lastIdleWindowString))
@@ -152,6 +153,7 @@ namespace TimeFlyTrap.Monitoring
                     wintimesidle.IdleTimes[lastIdleTime] = now;
                 }
             }
+
             _lastIdleWindowString = null;
         }
 
@@ -180,6 +182,7 @@ namespace TimeFlyTrap.Monitoring
             {
                 return buff.ToString();
             }
+
             return null;
         }
 
@@ -200,6 +203,7 @@ namespace TimeFlyTrap.Monitoring
             {
                 return buff.ToString();
             }
+
             return null;
         }
 
@@ -252,6 +256,7 @@ namespace TimeFlyTrap.Monitoring
                             wintimes.RemoveAt(i);
                         }
                     }
+
                     if (wintime != null)
                         wintimes.Add(wintime);
                 }
@@ -262,9 +267,11 @@ namespace TimeFlyTrap.Monitoring
                     .Where(wt => wt.TotalSeconds >= minimumSeconds));
         }
 
-        public static void SaveReportsToJsonAndHtml(ObservableCollection<WindowTimes> reportList, string jsonFilepath, string htmlFilepath /*, string recordingSaveToDirectory*/)
+        public static void SaveReportsToJsonAndHtml(IEnumerable<WindowTimes> reportList, string jsonFilepath, string htmlFilepath /*, string recordingSaveToDirectory*/)
         {
-            if (reportList == null || reportList.Count == 0)
+            var reportListArray = reportList as WindowTimes[] ?? reportList.ToArray();
+
+            if (reportList == null || reportListArray.Length == 0)
             {
                 throw new Exception("There are no reports to save");
             }
@@ -274,7 +281,7 @@ namespace TimeFlyTrap.Monitoring
                 File.Delete(jsonFilepath);
             }
 
-            File.WriteAllText(jsonFilepath, JsonConvert.SerializeObject(reportList.ToList()));
+            File.WriteAllText(jsonFilepath, JsonConvert.SerializeObject(reportListArray.ToList()));
 
             var htmltext = "";
             htmltext += "<html>";
@@ -294,7 +301,7 @@ namespace TimeFlyTrap.Monitoring
             htmltext += "<table cellspacing='0' border='1'>";
             htmltext += "<thead><th>Window Title</th><th>Total seconds</th><th>Idle seconds</th><th>Fullpath</th></thead>";
 
-            foreach (var rep in reportList)
+            foreach (var rep in reportListArray)
                 htmltext +=
                     "<tr>" +
                     string.Format(

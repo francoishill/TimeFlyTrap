@@ -43,7 +43,7 @@ namespace TimeFlyTrap.WpfApp
             services.AddTransient<IAppManager, AppManager>();
             services.AddTransient<IMainWindowProvider, MainWindowProvider>();
 
-            services.AddTransient<IAppFilePathProvider, AppFilePathProvider>();
+            services.AddTransient<IAppFileSystem, AppFileSystem>();
             services.AddTransient<IFileChooserFactory, FileChooserFactory>();
 
             services.AddTransient<INotifyIconViewModel, NotifyIconViewModel>();

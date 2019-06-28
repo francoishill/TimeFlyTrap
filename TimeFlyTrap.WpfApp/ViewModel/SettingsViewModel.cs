@@ -14,18 +14,18 @@ namespace TimeFlyTrap.WpfApp.ViewModel
     {
         private readonly ILogger _logger;
         private readonly ISettingsProvider _settingsProvider;
-        private readonly IAppFilePathProvider _appFilePathProvider;
+        private readonly IAppFileSystem _appFileSystem;
 
         private string _settingsJson;
 
         public SettingsViewModel(
             ILogger logger,
             ISettingsProvider settingsProvider,
-            IAppFilePathProvider appFilePathProvider)
+            IAppFileSystem appFileSystem)
         {
             _logger = logger;
             _settingsProvider = settingsProvider;
-            _appFilePathProvider = appFilePathProvider;
+            _appFileSystem = appFileSystem;
 
             LoadSettings();
         }
@@ -52,12 +52,8 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 
         private void LoadSettings()
         {
-            var settingsFilePath = _appFilePathProvider.SettingsFilePath;
-
-            if (File.Exists(settingsFilePath))
+            if (_appFileSystem.ReadSettingsFile(out var settingsJson))
             {
-                var settingsJson = File.ReadAllText(settingsFilePath);
-
                 try
                 {
                     var settings = JsonConvert.DeserializeObject<AppSettings>(settingsJson);
@@ -67,7 +63,7 @@ namespace TimeFlyTrap.WpfApp.ViewModel
                 }
                 catch (Exception exception)
                 {
-                    _logger.LogError(exception, $"Using default settings, invalid settings file content in {settingsFilePath}, content: {_settingsJson}");
+                    _logger.LogError(exception, $"Using default settings, invalid settings file content: {_settingsJson}");
                 }
             }
 
@@ -76,12 +72,10 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 
         private void SaveSettings(AppSettings appSettings)
         {
-            var settingsFilePath = _appFilePathProvider.SettingsFilePath;
-
             try
             {
                 var json = JsonConvert.SerializeObject(appSettings);
-                File.WriteAllText(settingsFilePath, json);
+                _appFileSystem.SaveSettings(json);
             }
             catch (Exception exception)
             {

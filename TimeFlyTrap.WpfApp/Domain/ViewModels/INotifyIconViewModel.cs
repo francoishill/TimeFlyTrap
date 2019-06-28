@@ -7,6 +7,7 @@ namespace TimeFlyTrap.WpfApp.Domain.ViewModels
         bool ShowNotifyIcon { get; set; }
         ICommand ChooseJsonFileDialogCommand { get; }
         ICommand ShowCurrentReportCommand { get; }
+        ICommand SaveCurrentReportCommand { get; }
         ICommand ExitCommand { get; }
     }
 }

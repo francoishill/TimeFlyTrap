@@ -54,7 +54,14 @@
                     DockPanel.Dock="Bottom"
                     Command="{Binding NotifyIcon.ShowCurrentReportCommand}"
                     VerticalAlignment="Top">
-                    Current Report
+                    Show Current Report
+                </Button>
+
+                <Button
+                    DockPanel.Dock="Bottom"
+                    Command="{Binding NotifyIcon.SaveCurrentReportCommand}"
+                    VerticalAlignment="Top">
+                    Save Current Report
                 </Button>
 
             </WrapPanel>

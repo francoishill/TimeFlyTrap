@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
 
 namespace TimeFlyTrap.Monitoring
 {
@@ -67,6 +68,45 @@ namespace TimeFlyTrap.Monitoring
             ProcessPath = processPath;
             IdleTimes = new Dictionary<DateTime, DateTime>();
             TotalTimes = new Dictionary<DateTime, DateTime>();
+        }
+
+        public static string GenerateHtml(Dictionary<string, WindowTimes> reportList)
+        {
+            var htmlText = new StringBuilder();
+            htmlText.Append("<html>");
+            htmlText.Append("<head>");
+
+            htmlText.Append("<style>");
+            htmlText.Append("td { vertical-align: top; }");
+            htmlText.Append(".title{ color: blue; }");
+            htmlText.Append(".totaltime{ color: green; }");
+            htmlText.Append(".idletime{ color: orange; }");
+            htmlText.Append(".fullpath{ color: gray; font-size: 10px; }");
+            htmlText.Append("</style>");
+
+            htmlText.Append("</head>");
+            htmlText.Append("<body>");
+
+            htmlText.Append("<table cellspacing='0' border='1'>");
+            htmlText.Append("<thead><th>Window Title</th><th>Total seconds</th><th>Idle seconds</th><th>Fullpath</th></thead>");
+
+            foreach (var rep in reportList.Values)
+            {
+                htmlText.Append(
+                    "<tr>" +
+                    string.Format(
+                        "<td class='title'>{0}</td><td class='totaltime'>{1}</td><td class='idletime'>{2}</td><td class='fullpath'>{3}</td>",
+                        rep.WindowTitle,
+                        string.Join("<br/>", rep.IdleTimes.Select(idl => idl.Key.ToString("yyyy-MM-dd HH:mm:ss") + " for " + (idl.Value != DateTime.MinValue ? (idl.Value.Subtract(idl.Key).TotalSeconds) : 0) + " seconds")),
+                        string.Join("<br/>", rep.TotalTimes.Select(idl => idl.Key.ToString("yyyy-MM-dd HH:mm:ss") + " for " + (idl.Value != DateTime.MinValue ? (idl.Value.Subtract(idl.Key).TotalSeconds) : 0) + " seconds")),
+                        rep.ProcessPath)
+                    + "</tr>");
+            }
+
+            htmlText.Append("</table>");
+            htmlText.Append("</body></html>");
+
+            return htmlText.ToString();
         }
     }
 }

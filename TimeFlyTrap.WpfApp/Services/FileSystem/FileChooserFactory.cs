@@ -6,17 +6,17 @@ namespace TimeFlyTrap.WpfApp.Services.FileSystem
     public class FileChooserFactory : IFileChooserFactory
     {
         private readonly IMainWindowProvider _mainWindowProvider;
-        private readonly IAppFilePathProvider _appFilePathProvider;
+        private readonly IAppFileSystem _appFileSystem;
 
-        public FileChooserFactory(IMainWindowProvider mainWindowProvider, IAppFilePathProvider appFilePathProvider)
+        public FileChooserFactory(IMainWindowProvider mainWindowProvider, IAppFileSystem appFileSystem)
         {
             _mainWindowProvider = mainWindowProvider;
-            _appFilePathProvider = appFilePathProvider;
+            _appFileSystem = appFileSystem;
         }
 
         public IFileChooser Create()
         {
-            return new FileChooser(_mainWindowProvider, _appFilePathProvider);
+            return new FileChooser(_mainWindowProvider, _appFileSystem);
         }
     }
 }

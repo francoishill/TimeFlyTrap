@@ -23,6 +23,7 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 
             ChooseJsonFileDialogCommand = new RelayCommand(OnChooseJsonFileDialog);
             ShowCurrentReportCommand = new RelayCommand(OnShowCurrentReport);
+            SaveCurrentReportCommand = new RelayCommand(OnSaveCurrentReport);
             ExitCommand = new RelayCommand(OnExit);
 
             HideWindowCommand = new RelayCommand(OnHideWindow);
@@ -33,6 +34,7 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 
         public ICommand ChooseJsonFileDialogCommand { get; }
         public ICommand ShowCurrentReportCommand { get; }
+        public ICommand SaveCurrentReportCommand { get; }
         public ICommand ExitCommand { get; }
 
         public ICommand HideWindowCommand { get; }
@@ -88,6 +90,11 @@ namespace TimeFlyTrap.WpfApp.ViewModel
         private void OnShowCurrentReport()
         {
             _messenger.Send(new ShowCurrentReportEvent());
+        }
+
+        private void OnSaveCurrentReport()
+        {
+            _messenger.Send(new SaveCurrentReportEvent());
         }
 
         private void OnExit()

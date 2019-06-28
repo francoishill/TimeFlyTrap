@@ -148,7 +148,7 @@
     <Compile Include="Constants.cs" />
     <Compile Include="Domain\ISettingsProvider.cs" />
     <Compile Include="Domain\Services\FileSystem\FileType.cs" />
-    <Compile Include="Domain\Services\FileSystem\IAppFilePathProvider.cs" />
+    <Compile Include="Domain\Services\FileSystem\IAppFileSystem.cs" />
     <Compile Include="Domain\Services\FileSystem\IFileChooser.cs" />
     <Compile Include="Domain\Services\FileSystem\IFileChooserFactory.cs" />
     <Compile Include="Domain\Services\IAppManager.cs" />
@@ -159,11 +159,12 @@
     <Compile Include="Domain\ViewModels\ISettingsViewModel.cs" />
     <Compile Include="Events\ChooseJsonFileDialogEvent.cs" />
     <Compile Include="Events\MainWindowLoadedEvent.cs" />
+    <Compile Include="Events\SaveCurrentReportEvent.cs" />
     <Compile Include="Events\ShowCurrentReportEvent.cs" />
     <Compile Include="Services\AppManager.cs" />
     <Compile Include="Services\FileSystem\FileChooser.cs" />
     <Compile Include="Services\FileSystem\FileChooserFactory.cs" />
-    <Compile Include="Services\FileSystem\AppFilePathProvider.cs" />
+    <Compile Include="Services\FileSystem\AppFileSystem.cs" />
     <Compile Include="Services\MainWindowProvider.cs" />
     <Compile Include="Services\SettingsProvider.cs" />
     <Compile Include="Settings\AppSettings.cs" />

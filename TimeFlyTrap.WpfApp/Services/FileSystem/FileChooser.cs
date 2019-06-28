@@ -9,19 +9,19 @@ namespace TimeFlyTrap.WpfApp.Services.FileSystem
     public class FileChooser : IFileChooser
     {
         private readonly IMainWindowProvider _mainWindowProvider;
-        private readonly IAppFilePathProvider _appFilePathProvider;
+        private readonly IAppFileSystem _appFileSystem;
 
-        public FileChooser(IMainWindowProvider mainWindowProvider, IAppFilePathProvider appFilePathProvider)
+        public FileChooser(IMainWindowProvider mainWindowProvider, IAppFileSystem appFileSystem)
         {
             _mainWindowProvider = mainWindowProvider;
-            _appFilePathProvider = appFilePathProvider;
+            _appFileSystem = appFileSystem;
         }
 
         public bool Choose(FileType fileType)
         {
             var openFileDialog = new OpenFileDialog
             {
-                InitialDirectory = _appFilePathProvider.LocalAppData,
+                InitialDirectory = _appFileSystem.LocalAppData,
                 Filter = FileFilterFromType(fileType),
                 CheckFileExists = true,
                 CheckPathExists = true,

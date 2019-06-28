@@ -45,6 +45,7 @@ namespace TimeFlyTrap.ConsoleApp
         {
             if (_tracker.StopAndGetReport(out var report))
             {
+                //TODO: Should get from IAppFilePathProvider.LocalAppData
                 var dir = Path.Combine(
                     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
                     "TimeFlyTrap",
