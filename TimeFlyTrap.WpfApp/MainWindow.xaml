@@ -19,7 +19,7 @@
     <Grid>
 
         <tb:TaskbarIcon
-            Visibility="{Binding NotifyIcon.ShowNotifyIcon}"
+            Visibility="{Binding NotifyIcon.ShowNotifyIcon, Converter={StaticResource BooleanToVisibilityConverter}}"
             ToolTipText="Fallback ToolTip for Windows xp"
             IconSource="Images/tray_icon.ico"
             MenuActivation="LeftOrRightClick"
