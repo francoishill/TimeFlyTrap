@@ -11,7 +11,7 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 
         public LogLine(string text, LogLevel level, DateTime? time = null)
         {
-            TimeString = (time ?? DateTime.Now).ToString("yyyy-MM-dd HH:mm");
+            TimeString = (time ?? DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss");
             Text = text;
             Level = level;
         }
