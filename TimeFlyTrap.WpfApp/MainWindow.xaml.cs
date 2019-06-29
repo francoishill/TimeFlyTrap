@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Extensions.DependencyInjection;
+using TimeFlyTrap.WpfApp.Domain.Services;
 using TimeFlyTrap.WpfApp.Events;
 
 namespace TimeFlyTrap.WpfApp
@@ -24,6 +26,16 @@ namespace TimeFlyTrap.WpfApp
             {
                 var messenger = scope.ServiceProvider.GetRequiredService<IMessenger>();
                 messenger.Send(new MainWindowLoadedEvent());
+            }
+        }
+
+        private void MainWindow_OnClosing(object sender, CancelEventArgs e)
+        {
+            e.Cancel = true;
+            using (var scope = ServiceProvider.CreateScope())
+            {
+                var appManager = scope.ServiceProvider.GetRequiredService<IAppManager>();
+                appManager.HideMainWindow();
             }
         }
     }

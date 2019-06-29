@@ -15,11 +15,13 @@ namespace TimeFlyTrap.WpfApp.Services
         public void HideMainWindow()
         {
             _mainWindowProvider.Window.Hide();
+            _mainWindowProvider.Window.WindowState = WindowState.Minimized;
         }
 
         public void ShowMainWindow()
         {
             _mainWindowProvider.Window.Show();
+            _mainWindowProvider.Window.WindowState = WindowState.Maximized;
         }
 
         public void ShutDown()
