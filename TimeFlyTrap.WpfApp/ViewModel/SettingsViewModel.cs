@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using GalaSoft.MvvmLight;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;

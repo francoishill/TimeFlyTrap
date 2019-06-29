@@ -172,6 +172,7 @@
     <Compile Include="Services\SettingsProvider.cs" />
     <Compile Include="Settings\AppSettings.cs" />
     <Compile Include="ViewModel\ActiveWindowTrackerViewModel.cs" />
+    <Compile Include="ViewModel\LogLine.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="ViewModel\NotifyIconViewModel.cs" />
     <Compile Include="ViewModel\ReportViewModel.cs" />

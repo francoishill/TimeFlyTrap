@@ -1,20 +1,55 @@
 <ResourceDictionary
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:viewModel="clr-namespace:TimeFlyTrap.WpfApp.ViewModel"
-    xmlns:wpfUtils="clr-namespace:TimeFlyTrap.WpfApp.WpfUtils">
+    xmlns:viewModel="clr-namespace:TimeFlyTrap.WpfApp.ViewModel">
+
+    <DataTemplate x:Key="LogLine" DataType="viewModel:LogLine">
+
+        <WrapPanel Orientation="Horizontal">
+            <TextBlock Name="_textBox" Text="{Binding DisplayText}" />
+        </WrapPanel>
+
+        <DataTemplate.Triggers>
+
+            <DataTrigger Binding="{Binding IsTrace}" Value="true">
+                <Setter TargetName="_textBox" Property="Foreground" Value="#FFA3A3A3" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsDebug}" Value="true">
+                <Setter TargetName="_textBox" Property="Foreground" Value="#FF636363" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsWarning}" Value="true">
+                <Setter TargetName="_textBox" Property="Foreground" Value="Salmon" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsError}" Value="true">
+                <Setter TargetName="_textBox" Property="Foreground" Value="Tomato" />
+            </DataTrigger>
+
+            <DataTrigger Binding="{Binding IsCritical}" Value="true">
+                <Setter TargetName="_textBox" Property="Foreground" Value="Red" />
+            </DataTrigger>
+
+        </DataTemplate.Triggers>
+    </DataTemplate>
 
     <DataTemplate x:Key="ActiveWindowTrackerControl" DataType="viewModel:ActiveWindowTrackerViewModel">
-        <TextBox
-            HorizontalAlignment="Stretch"
-            VerticalAlignment="Stretch"
-            VerticalContentAlignment="Stretch"
-            HorizontalScrollBarVisibility="Auto"
-            VerticalScrollBarVisibility="Auto"
-            Text="{Binding LogText, Mode=OneWay}"
-            IsReadOnly="True"
-            IsReadOnlyCaretVisible="True"
-            wpfUtils:TextBoxUtilities.AlwaysScrollToEnd="True" />
+
+        <ListView
+            Padding="20"
+            Margin="20"
+            ItemsSource="{Binding LogLines}"
+            ItemTemplate="{StaticResource LogLine}">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="Padding" Value="0" />
+                    <Setter Property="Margin" Value="0" />
+                    <Setter Property="BorderThickness" Value="0" />
+                </Style>
+            </ListView.ItemContainerStyle>
+        </ListView>
+
     </DataTemplate>
 
 </ResourceDictionary>

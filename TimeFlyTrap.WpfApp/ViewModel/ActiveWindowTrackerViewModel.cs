@@ -1,8 +1,9 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Threading;
 using Microsoft.Extensions.Logging;
 using TimeFlyTrap.Monitoring;
 using TimeFlyTrap.WpfApp.Domain;
@@ -15,7 +16,6 @@ namespace TimeFlyTrap.WpfApp.ViewModel
         private readonly IActiveWindowsTracker _activeWindowsTracker;
         private readonly ISettingsProvider _settingsProvider;
         private readonly object _logLinesLock = new object();
-        private readonly Queue<string> _logLines = new Queue<string>();
 
         public ActiveWindowTrackerViewModel(
             IActiveWindowsTracker activeWindowsTracker,
@@ -25,27 +25,29 @@ namespace TimeFlyTrap.WpfApp.ViewModel
             _settingsProvider = settingsProvider;
         }
 
-        // ReSharper disable once InconsistentlySynchronizedField
-        public string LogText => string.Join(Environment.NewLine, _logLines);
+        public ObservableCollection<LogLine> LogLines { get; } = new ObservableCollection<LogLine>();
 
         public void StartTracking()
         {
             _activeWindowsTracker.StartTicker(new TrackingListener(this));
         }
 
-        private void AppendLine(string text)
+        private void AppendLine(LogLine line)
         {
-            lock (_logLinesLock)
+            DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
-                _logLines.Enqueue(text);
-
-                while (_logLines.Count > Constants.MAX_LOG_LINES)
+                lock (_logLinesLock)
                 {
-                    _logLines.Dequeue();
-                }
+                    LogLines.Insert(0, line);
 
-                RaisePropertyChanged(nameof(LogText));
-            }
+                    while (LogLines.Count > Constants.MAX_LOG_LINES)
+                    {
+                        LogLines.RemoveAt(LogLines.Count - 1);
+                    }
+
+                    RaisePropertyChanged(nameof(LogLines));
+                }
+            });
         }
 
         private class TrackingListener : ITrackingListener
@@ -71,17 +73,17 @@ namespace TimeFlyTrap.WpfApp.ViewModel
         private void OnActiveWindowInfo(OnActiveWindowInfoEvent @event)
         {
             var formattedTitle = FormatTitle(@event.Title);
-            AppendLine($"New title: {formattedTitle}, Module: {@event.ModuleFilePath}");
+            AppendLine(new LogLine($"New title: {formattedTitle}, Module: {@event.ModuleFilePath}", LogLevel.Debug));
         }
 
         private void OnLastInfo(OnLastInfoEvent @event)
         {
-            AppendLine($"Startup: {@event.SystemStartupTime}, IdleDuration: {@event.IdleDuration}");
+            AppendLine(new LogLine($"Startup: {@event.SystemStartupTime}, IdleDuration: {@event.IdleDuration}", LogLevel.Trace));
         }
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            AppendLine($"[{logLevel.ToString()}] {eventId} {formatter(state, exception)}");
+            AppendLine(new LogLine($"[{logLevel.ToString()}] {eventId} {formatter(state, exception)}", logLevel));
         }
 
         private string FormatTitle(string title)
