@@ -21,26 +21,17 @@ namespace TimeFlyTrap.WpfApp.ViewModel
             _appManager = appManager;
             _messenger = messenger;
 
-            ChooseJsonFileDialogCommand = new RelayCommand(OnChooseJsonFileDialog);
-            ShowCurrentReportCommand = new RelayCommand(OnShowCurrentReport);
-            SaveCurrentReportCommand = new RelayCommand(OnSaveCurrentReport);
-            ExitCommand = new RelayCommand(OnExit);
-
-            HideWindowCommand = new RelayCommand(OnHideWindow);
-            ShowWindowCommand = new RelayCommand(OnShowWindow);
-            ToggleWindowVisibilityCommand = new RelayCommand(OnToggleWindowVisibility);
-
             _messenger.Register<MainWindowLoadedEvent>(this, OnMainWindowLoaded);
         }
 
-        public ICommand ChooseJsonFileDialogCommand { get; }
-        public ICommand ShowCurrentReportCommand { get; }
-        public ICommand SaveCurrentReportCommand { get; }
-        public ICommand ExitCommand { get; }
+        public ICommand ChooseJsonFileDialogCommand => new RelayCommand(OnChooseJsonFileDialog);
+        public ICommand ShowCurrentReportCommand => new RelayCommand(OnShowCurrentReport);
+        public ICommand SaveCurrentReportCommand => new RelayCommand(OnSaveCurrentReport);
+        public ICommand ExitCommand => new RelayCommand(OnExit);
 
-        public ICommand HideWindowCommand { get; }
-        public ICommand ShowWindowCommand { get; }
-        public ICommand ToggleWindowVisibilityCommand { get; }
+        public ICommand HideWindowCommand => new RelayCommand(OnHideWindow);
+        public ICommand ShowWindowCommand => new RelayCommand(OnShowWindow);
+        public ICommand ToggleWindowVisibilityCommand => new RelayCommand(OnToggleWindowVisibility);
 
         public bool ShowNotifyIcon
         {
