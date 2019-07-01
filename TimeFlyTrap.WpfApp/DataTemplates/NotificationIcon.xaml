@@ -9,8 +9,10 @@
             Visibility="{Binding ShowNotifyIcon, Converter={StaticResource BooleanToVisibilityConverter}}"
             ToolTipText="Fallback ToolTip for Windows xp"
             IconSource="../Images/tray_icon.ico"
-            MenuActivation="LeftOrRightClick"
-            PopupActivation="DoubleClick">
+            MenuActivation="RightClick"
+            PopupActivation="DoubleClick"
+            NoLeftClickDelay="True"
+            LeftClickCommand="{Binding ToggleWindowVisibilityCommand}">
             <tb:TaskbarIcon.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="_Hide" Command="{Binding HideWindowCommand}" Visibility="{Binding ShowWindow, Converter={StaticResource BooleanToVisibilityConverter}}" />

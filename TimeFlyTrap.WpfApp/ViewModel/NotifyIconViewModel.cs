@@ -28,6 +28,7 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 
             HideWindowCommand = new RelayCommand(OnHideWindow);
             ShowWindowCommand = new RelayCommand(OnShowWindow);
+            ToggleWindowVisibilityCommand = new RelayCommand(OnToggleWindowVisibility);
 
             _messenger.Register<MainWindowLoadedEvent>(this, OnMainWindowLoaded);
         }
@@ -39,6 +40,7 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 
         public ICommand HideWindowCommand { get; }
         public ICommand ShowWindowCommand { get; }
+        public ICommand ToggleWindowVisibilityCommand { get; }
 
         public bool ShowNotifyIcon
         {
@@ -80,6 +82,18 @@ namespace TimeFlyTrap.WpfApp.ViewModel
         {
             ShowWindow = true;
             _appManager.ShowMainWindow();
+        }
+
+        private void OnToggleWindowVisibility()
+        {
+            if (ShowWindow)
+            {
+                OnHideWindow();
+            }
+            else
+            {
+                OnShowWindow();
+            }
         }
 
         private void OnChooseJsonFileDialog()
