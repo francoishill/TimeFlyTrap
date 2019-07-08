@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeFlyTrap.ConsoleApp", "T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeFlyTrap.WpfApp", "TimeFlyTrap.WpfApp\TimeFlyTrap.WpfApp.csproj", "{72CAD329-FAC5-405B-87D9-314A7288D462}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeFlyTrap.PlayAccumulateWpf", "TimeFlyTrap.PlayAccumulateWpf\TimeFlyTrap.PlayAccumulateWpf.csproj", "{03FD6457-7BF0-46E9-8EB1-194C6DAD36A8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{72CAD329-FAC5-405B-87D9-314A7288D462}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72CAD329-FAC5-405B-87D9-314A7288D462}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72CAD329-FAC5-405B-87D9-314A7288D462}.Release|Any CPU.Build.0 = Release|Any CPU
+		{03FD6457-7BF0-46E9-8EB1-194C6DAD36A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03FD6457-7BF0-46E9-8EB1-194C6DAD36A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03FD6457-7BF0-46E9-8EB1-194C6DAD36A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03FD6457-7BF0-46E9-8EB1-194C6DAD36A8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
