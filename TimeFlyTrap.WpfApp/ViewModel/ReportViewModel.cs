@@ -54,18 +54,13 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 
         private void OnShowCurrentReport(ShowCurrentReportEvent @event)
         {
-            if (_activeWindowsTracker.GetReport(out var activeWindowsList))
-            {
-                ReportTimes = activeWindowsList.Values;
-            }
+            ReportTimes = _activeWindowsTracker.GetReport(false).Values;
         }
 
         private void OnSaveCurrentReport(SaveCurrentReportEvent @event)
         {
-            if (_activeWindowsTracker.GetReport(out var activeWindowsList))
-            {
-                _appFileSystem.WriteReport(activeWindowsList);
-            }
+            var list = _activeWindowsTracker.GetReport(true);
+            _appFileSystem.WriteReport(list);
         }
 
         public ICollection<WindowTimes> ReportTimes

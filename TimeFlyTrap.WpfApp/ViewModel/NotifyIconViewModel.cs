@@ -105,6 +105,7 @@ namespace TimeFlyTrap.WpfApp.ViewModel
         private void OnExit()
         {
             ShowNotifyIcon = false;
+            _messenger.Send(new SaveCurrentReportEvent());
             _appManager.ShutDown();
         }
     }

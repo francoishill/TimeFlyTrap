@@ -5,6 +5,6 @@ namespace TimeFlyTrap.Monitoring
     public interface IActiveWindowsTracker
     {
         void StartTicker(ITrackingListener trackingListener);
-        bool GetReport(out Dictionary<string, WindowTimes> activeWindowsList);
+        Dictionary<string, WindowTimes> GetReport(bool clearList);
     }
 }

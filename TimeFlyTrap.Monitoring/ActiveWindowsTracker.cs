@@ -157,18 +157,28 @@ namespace TimeFlyTrap.Monitoring
             _lastIdleWindowString = null;
         }
 
-        public bool StopAndGetReport(out Dictionary<string, WindowTimes> activatedWindowsList)
-        {
-            Stop();
-            return GetReport(out activatedWindowsList);
-        }
+//        public bool StopAndGetReport(out Dictionary<string, WindowTimes> activatedWindowsList)
+//        {
+//            Stop();
+//            return GetReport(out activatedWindowsList);
+//        }
 
-        public bool GetReport(out Dictionary<string, WindowTimes> activeWindowsList)
+        public Dictionary<string, WindowTimes> GetReport(bool clearList)
         {
-            activeWindowsList = _activatedWindowsAndTimes
-                .OrderBy(kv => -kv.Value.TotalTimes.Sum(dateDur => dateDur.Value != DateTime.MinValue ? (dateDur.Value.Subtract(dateDur.Key).TotalSeconds) : 0))
-                .ToDictionary(kv => kv.Key, kv => kv.Value);
-            return true;
+            lock (_activatedWindowsAndTimes)
+            {
+                var list = _activatedWindowsAndTimes
+                    .ToList() // clone
+                    .OrderBy(kv => -kv.Value.TotalTimes.Sum(dateDur => dateDur.Value != DateTime.MinValue ? (dateDur.Value.Subtract(dateDur.Key).TotalSeconds) : 0))
+                    .ToDictionary(kv => kv.Key, kv => kv.Value);
+
+                if (clearList)
+                {
+                    _activatedWindowsAndTimes.Clear();
+                }
+
+                return list;
+            }
         }
 
         public static string GetActiveWindowTitle()
