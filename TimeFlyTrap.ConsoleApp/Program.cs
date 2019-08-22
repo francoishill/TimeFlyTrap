@@ -30,14 +30,9 @@ namespace TimeFlyTrap.ConsoleApp
 
         private class TrackingListener : ITrackingListener
         {
-            public void OnLastInfo(OnLastInfoEvent @event)
-            {
-                Console.WriteLine($"Startup: {@event.SystemStartupTime}, IdleDuration: {@event.IdleDuration}");
-            }
-
             public void OnActiveWindowInfo(OnActiveWindowInfoEvent @event)
             {
-                Console.WriteLine($"New title: {@event.Title}, Module: {@event.ModuleFilePath}");
+                Console.WriteLine($"New title: {@event.Title}, Module: {@event.ModuleFilePath}, Startup: {@event.SystemStartupTime}, IdleDuration: {@event.IdleDuration}");
             }
         }
 

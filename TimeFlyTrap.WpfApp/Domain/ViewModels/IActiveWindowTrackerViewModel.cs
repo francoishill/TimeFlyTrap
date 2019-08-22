@@ -1,8 +1,6 @@
-using Microsoft.Extensions.Logging;
-
 namespace TimeFlyTrap.WpfApp.Domain.ViewModels
 {
-    public interface IActiveWindowTrackerViewModel : ILogger
+    public interface IActiveWindowTrackerViewModel
     {
         void StartTracking();
     }

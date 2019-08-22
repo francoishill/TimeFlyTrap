@@ -11,14 +11,14 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 {
     public class SettingsViewModel : ViewModelBase, ISettingsViewModel
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<SettingsViewModel> _logger;
         private readonly ISettingsProvider _settingsProvider;
         private readonly IAppFileSystem _appFileSystem;
 
         private string _settingsJson;
 
         public SettingsViewModel(
-            ILogger logger,
+            ILogger<SettingsViewModel> logger,
             ISettingsProvider settingsProvider,
             IAppFileSystem appFileSystem)
         {

@@ -9,10 +9,10 @@ namespace TimeFlyTrap.Monitoring
     {
         [DllImport("User32.dll")]
         private static extern bool GetLastInputInfo(ref LastInputInfo plii);
-        
+
         [DllImport("user32.dll")]
         public static extern IntPtr GetWindowThreadProcessId(IntPtr hWnd, out uint processId);
-        
+
         [DllImport("user32.dll")]
         public static extern IntPtr GetForegroundWindow();
 
@@ -69,10 +69,10 @@ namespace TimeFlyTrap.Monitoring
             GetWindowThreadProcessId(windowHandle, out pid);
             try
             {
-                var p = Process.GetProcessById((int)pid);
+                var p = Process.GetProcessById((int) pid);
                 return p.MainModule?.FileName;
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 Console.WriteLine($"Failed to GetProcessOfWindowHandle, exception: " + exception.Message);
                 return null;

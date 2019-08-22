@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Newtonsoft.Json;
+using TimeFlyTrap.Common;
 using TimeFlyTrap.Monitoring;
 using TimeFlyTrap.WpfApp.Domain.Services.FileSystem;
 
@@ -11,21 +12,7 @@ namespace TimeFlyTrap.WpfApp.Services.FileSystem
 {
     public class AppFileSystem : IAppFileSystem
     {
-        private const string APP_FOLDER_NAME = "TimeFlyTrap";
-
-        public string LocalAppData
-        {
-            get
-            {
-                var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), APP_FOLDER_NAME);
-                if (!Directory.Exists(dir))
-                {
-                    Directory.CreateDirectory(dir);
-                }
-
-                return dir;
-            }
-        }
+        public string LocalAppData => AppStateHelper.ApplicationLocalDataDirectory;
 
         private string SettingsFilePath => Path.Combine(LocalAppData, "Settings.json");
 
@@ -58,7 +45,7 @@ namespace TimeFlyTrap.WpfApp.Services.FileSystem
             var filePathWithoutExtension = Path.Combine(dir, $"{DateTime.Now:yyyy-MM-dd HH_mm_ss}");
             var jsonFilepath = filePathWithoutExtension + ".json";
             var htmlFilepath = filePathWithoutExtension + ".html";
-    
+
             if (reportList == null || reportList.Count == 0)
             {
                 throw new Exception("There are no reports to save");

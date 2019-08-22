@@ -7,22 +7,30 @@ using GalaSoft.MvvmLight.Threading;
 using Microsoft.Extensions.Logging;
 using TimeFlyTrap.Monitoring;
 using TimeFlyTrap.WpfApp.Domain;
+using TimeFlyTrap.WpfApp.Domain.Services;
 using TimeFlyTrap.WpfApp.Domain.ViewModels;
 
 namespace TimeFlyTrap.WpfApp.ViewModel
 {
     public class ActiveWindowTrackerViewModel : ViewModelBase, IActiveWindowTrackerViewModel
     {
+        private readonly ILogger<ActiveWindowTrackerViewModel> _logger;
         private readonly IActiveWindowsTracker _activeWindowsTracker;
         private readonly ISettingsProvider _settingsProvider;
+        private readonly IApiUploader _apiUploader;
+
         private readonly object _logLinesLock = new object();
 
         public ActiveWindowTrackerViewModel(
+            ILogger<ActiveWindowTrackerViewModel> logger,
             IActiveWindowsTracker activeWindowsTracker,
-            ISettingsProvider settingsProvider)
+            ISettingsProvider settingsProvider,
+            IApiUploader apiUploader)
         {
+            _logger = logger;
             _activeWindowsTracker = activeWindowsTracker;
             _settingsProvider = settingsProvider;
+            _apiUploader = apiUploader;
         }
 
         public ObservableCollection<LogLine> LogLines { get; } = new ObservableCollection<LogLine>();
@@ -34,6 +42,8 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 
         private void AppendLine(LogLine line)
         {
+            _logger.Log(line.Level, 0, line.Text);
+
             DispatcherHelper.CheckBeginInvokeOnUI(() =>
             {
                 lock (_logLinesLock)
@@ -59,11 +69,6 @@ namespace TimeFlyTrap.WpfApp.ViewModel
                 _viewModel = viewModel;
             }
 
-            public void OnLastInfo(OnLastInfoEvent @event)
-            {
-                _viewModel.OnLastInfo(@event);
-            }
-
             public void OnActiveWindowInfo(OnActiveWindowInfoEvent @event)
             {
                 _viewModel.OnActiveWindowInfo(@event);
@@ -73,15 +78,11 @@ namespace TimeFlyTrap.WpfApp.ViewModel
         private void OnActiveWindowInfo(OnActiveWindowInfoEvent @event)
         {
             var formattedTitle = FormatTitle(@event.Title);
-            AppendLine(new LogLine($"New title: {formattedTitle}, Module: {@event.ModuleFilePath}", LogLevel.Debug));
+            AppendLine(new LogLine($"New title: {formattedTitle}, Module: {@event.ModuleFilePath}, Startup: {@event.SystemStartupTime}, IdleDuration: {@event.IdleDuration}", LogLevel.Debug));
+            _apiUploader.OnActiveWindowInfo(@event);
         }
 
-        private void OnLastInfo(OnLastInfoEvent @event)
-        {
-            AppendLine(new LogLine($"Startup: {@event.SystemStartupTime}, IdleDuration: {@event.IdleDuration}", LogLevel.Trace));
-        }
-
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        private void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
             AppendLine(new LogLine($"[{logLevel.ToString()}] {eventId} {formatter(state, exception)}", logLevel));
         }

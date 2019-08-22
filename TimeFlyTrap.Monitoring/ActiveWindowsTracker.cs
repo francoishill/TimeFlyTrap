@@ -62,8 +62,6 @@ namespace TimeFlyTrap.Monitoring
                 return;
             }
 
-            trackingListener.OnLastInfo(new OnLastInfoEvent(systemStartupTime, idleDuration));
-
             if (_isBusy)
             {
                 return;
@@ -72,7 +70,7 @@ namespace TimeFlyTrap.Monitoring
             _isBusy = true;
             try
             {
-                RecordMeasurement(trackingListener, idleDuration);
+                RecordMeasurement(trackingListener, systemStartupTime, idleDuration);
             }
             finally
             {
@@ -80,14 +78,14 @@ namespace TimeFlyTrap.Monitoring
             }
         }
 
-        private void RecordMeasurement(ITrackingListener trackingListener, TimeSpan idleDuration)
+        private void RecordMeasurement(ITrackingListener trackingListener, DateTime systemStartupTime, TimeSpan idleDuration)
         {
             var now = DateTime.Now;
             _activeWindowTitle = GetActiveWindowTitle() ?? NULL_WINDOW_TITLE;
             _activeWindowModuleFilepath = GetActiveWindowModuleFilePath() ?? NULL_FILE_PATH;
             _activeWindowString = _activeWindowTitle + "|" + _activeWindowModuleFilepath;
 
-            trackingListener.OnActiveWindowInfo(new OnActiveWindowInfoEvent(_activeWindowTitle, _activeWindowModuleFilepath));
+            trackingListener.OnActiveWindowInfo(new OnActiveWindowInfoEvent(now, _activeWindowTitle, _activeWindowModuleFilepath, systemStartupTime, idleDuration));
 
             if (!_activatedWindowsAndTimes.ContainsKey(_activeWindowString))
             {

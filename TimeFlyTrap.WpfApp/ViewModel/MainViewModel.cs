@@ -1,17 +1,7 @@
 using System;
-using System.IO;
-using System.Windows;
-using System.Windows.Input;
 using GalaSoft.MvvmLight;
-using GalaSoft.MvvmLight.CommandWpf;
-using GalaSoft.MvvmLight.Messaging;
-using GalaSoft.MvvmLight.Threading;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Win32;
-using TimeFlyTrap.WpfApp.Domain;
-using TimeFlyTrap.WpfApp.Domain.Services;
 using TimeFlyTrap.WpfApp.Domain.ViewModels;
-using TimeFlyTrap.WpfApp.Events;
 
 namespace TimeFlyTrap.WpfApp.ViewModel
 {

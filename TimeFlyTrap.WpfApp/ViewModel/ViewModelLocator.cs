@@ -13,7 +13,6 @@
 */
 
 using CommonServiceLocator;
-using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 
 namespace TimeFlyTrap.WpfApp.ViewModel
@@ -47,12 +46,9 @@ namespace TimeFlyTrap.WpfApp.ViewModel
 
         public MainViewModel Main
         {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
-            }
+            get { return ServiceLocator.Current.GetInstance<MainViewModel>(); }
         }
-        
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels
