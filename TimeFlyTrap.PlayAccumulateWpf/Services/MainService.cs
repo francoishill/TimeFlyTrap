@@ -12,7 +12,7 @@ namespace PlayAccumulateTimeFlyTrap.Services
         public IEnumerable<WindowTimes> LoadWindowTimes()
         {
             var dir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "TimeFlyTrap");
-            
+
             var jsonFiles = Directory
                 .GetFiles(dir, "*.json", SearchOption.AllDirectories)
                 .Where(file => !file.EndsWith("Settings.json", StringComparison.OrdinalIgnoreCase));

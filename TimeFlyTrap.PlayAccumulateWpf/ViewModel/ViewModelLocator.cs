@@ -44,7 +44,7 @@ namespace PlayAccumulateTimeFlyTrap.ViewModel
                 // Create run time view services and models
                 SimpleIoc.Default.Register<IMainService, MainService>();
             }
-            
+
             var settingsFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), @"TimeFlyTrap\Settings.json");
             SimpleIoc.Default.Register<ISettingsProvider>(() => new SettingsProvider(settingsFilePath));
 
@@ -53,12 +53,9 @@ namespace PlayAccumulateTimeFlyTrap.ViewModel
 
         public MainViewModel Main
         {
-            get
-            {
-                return ServiceLocator.Current.GetInstance<MainViewModel>();
-            }
+            get { return ServiceLocator.Current.GetInstance<MainViewModel>(); }
         }
-        
+
         public static void Cleanup()
         {
             // TODO Clear the ViewModels

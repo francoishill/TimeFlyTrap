@@ -114,4 +114,8 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Multiple_patterns_match_title_x_using_first_x" xml:space="preserve">
+    <value>ERROR: Multiple patterns match title '{0}', using first: 
+{1}</value>
+  </data>
 </root>

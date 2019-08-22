@@ -1,14 +1,10 @@
 ﻿using System;
-using System.Collections.ObjectModel;
-using System.IO;
-using System.Threading;
-using TimeFlyTrap.Monitoring;
 
 namespace TimeFlyTrap.ConsoleApp
 {
     class Program
     {
-        private static ActiveWindowsTracker _tracker;
+        //private static ActiveWindowsTracker _tracker;
 
         // ReSharper disable once ArrangeTypeMemberModifiers
         // ReSharper disable once UnusedParameter.Local

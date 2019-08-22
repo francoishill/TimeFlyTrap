@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using GalaSoft.MvvmLight;
-using Newtonsoft.Json;
-using PlayAccumulateTimeFlyTrap.Models;
+using PlayAccumulateTimeFlyTrap.Properties;
 using PlayAccumulateTimeFlyTrap.Services;
 
 namespace PlayAccumulateTimeFlyTrap.ViewModel
@@ -68,7 +66,7 @@ namespace PlayAccumulateTimeFlyTrap.ViewModel
             if (matches.Length > 1)
             {
                 //TODO: no logging
-                Console.WriteLine($"ERROR: Multiple patterns match title '{title}', using first:\n{string.Join(Environment.NewLine, matches.Select(x => x.Pattern))}");
+                Console.WriteLine(Resources.Multiple_patterns_match_title_x_using_first_x, title, string.Join(Environment.NewLine, matches.Select(x => x.Pattern)));
 //                Log(
 //                    LogLevel.Error,
 //                    0,

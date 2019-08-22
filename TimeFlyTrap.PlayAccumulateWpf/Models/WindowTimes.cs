@@ -8,7 +8,7 @@ using System.Linq;
 namespace PlayAccumulateTimeFlyTrap.Models
 {
     //TODO: Duplicate in TimeFlyTrap.Monitoring project
-    [DebuggerDisplay("IdleSeconds = {IdleSeconds}, TotalSeconds = {TotalSeconds}")]
+    [DebuggerDisplay("IdleDuration = {IdleDuration}, TotalDuration = {TotalDuration}")]
     public class WindowTimes
     {
         public string WindowTitle { get; set; }
