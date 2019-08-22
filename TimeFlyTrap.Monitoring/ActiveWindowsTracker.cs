@@ -55,9 +55,9 @@ namespace TimeFlyTrap.Monitoring
         private void OnTicker(ITrackingListener trackingListener)
         {
             DateTime systemStartupTime;
-            TimeSpan idleDuration;
+            TimeSpan userIdleDuration;
 
-            if (!Win32.GetLastInputInfo(out systemStartupTime, out idleDuration))
+            if (!Win32.GetLastInputInfo(out systemStartupTime, out userIdleDuration))
             {
                 return;
             }
@@ -70,7 +70,7 @@ namespace TimeFlyTrap.Monitoring
             _isBusy = true;
             try
             {
-                RecordMeasurement(trackingListener, systemStartupTime, idleDuration);
+                RecordMeasurement(trackingListener, systemStartupTime, userIdleDuration);
             }
             finally
             {
@@ -78,14 +78,14 @@ namespace TimeFlyTrap.Monitoring
             }
         }
 
-        private void RecordMeasurement(ITrackingListener trackingListener, DateTime systemStartupTime, TimeSpan idleDuration)
+        private void RecordMeasurement(ITrackingListener trackingListener, DateTime systemStartupTime, TimeSpan userIdleDuration)
         {
             var now = DateTime.Now;
             _activeWindowTitle = GetActiveWindowTitle() ?? NULL_WINDOW_TITLE;
             _activeWindowModuleFilepath = GetActiveWindowModuleFilePath() ?? NULL_FILE_PATH;
             _activeWindowString = _activeWindowTitle + "|" + _activeWindowModuleFilepath;
 
-            trackingListener.OnActiveWindowInfo(new OnActiveWindowInfoEvent(now, _activeWindowTitle, _activeWindowModuleFilepath, systemStartupTime, idleDuration));
+            trackingListener.OnActiveWindowInfo(new OnActiveWindowInfoEvent(now, _activeWindowTitle, _activeWindowModuleFilepath, systemStartupTime, userIdleDuration));
 
             if (!_activatedWindowsAndTimes.ContainsKey(_activeWindowString))
             {
@@ -104,12 +104,12 @@ namespace TimeFlyTrap.Monitoring
             var lastStartTime = winTimes.TotalTimes.Last().Key;
             winTimes.TotalTimes[lastStartTime] = now;
 
-            if (idleDuration.TotalSeconds > _minimumIdleDuration.TotalSeconds)
+            if (userIdleDuration.TotalSeconds > _minimumIdleDuration.TotalSeconds)
             {
                 if (!_activeWindowString.Equals(_lastIdleWindowString, StringComparison.InvariantCultureIgnoreCase))
                 {
                     _lastIdleWindowString = _activeWindowString;
-                    winTimes.IdleTimes.Add(now.Subtract(idleDuration), DateTime.MinValue);
+                    winTimes.IdleTimes.Add(now.Subtract(userIdleDuration), DateTime.MinValue);
                 }
 
                 var lastIdleStart = winTimes.IdleTimes.Last().Key;

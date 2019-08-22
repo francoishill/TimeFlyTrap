@@ -78,7 +78,7 @@ namespace TimeFlyTrap.WpfApp.ViewModel
         private void OnActiveWindowInfo(OnActiveWindowInfoEvent @event)
         {
             var formattedTitle = FormatTitle(@event.Title);
-            AppendLine(new LogLine($"New title: {formattedTitle}, Module: {@event.ModuleFilePath}, Startup: {@event.SystemStartupTime}, IdleDuration: {@event.IdleDuration}", LogLevel.Debug));
+            AppendLine(new LogLine($"New title: {formattedTitle}, Module: {@event.ModuleFilePath}, Startup: {@event.SystemStartupTime}, IdleDuration: {@event.UserIdleDuration}", LogLevel.Debug));
             _apiUploader.OnActiveWindowInfo(@event);
         }
 

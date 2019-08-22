@@ -10,15 +10,15 @@ namespace TimeFlyTrap.Monitoring
         public string Title { get; }
         public string ModuleFilePath { get; }
         public DateTime SystemStartupTime { get; }
-        public TimeSpan IdleDuration { get; }
+        public TimeSpan UserIdleDuration { get; }
 
-        public OnActiveWindowInfoEvent(DateTime time, string title, string moduleFilePath, DateTime systemStartupTime, TimeSpan idleDuration)
+        public OnActiveWindowInfoEvent(DateTime time, string title, string moduleFilePath, DateTime systemStartupTime, TimeSpan userIdleDuration)
         {
             Time = time;
             Title = title;
             ModuleFilePath = moduleFilePath;
             SystemStartupTime = systemStartupTime;
-            IdleDuration = idleDuration;
+            UserIdleDuration = userIdleDuration;
         }
     }
 }
