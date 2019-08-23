@@ -99,7 +99,8 @@ namespace TimeFlyTrap.WpfApp.Services
                 {
                     _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", Token.AccessToken);
 
-                    var postBody = new UploadRequest(events);
+                    var machineName = Environment.MachineName;
+                    var postBody = new UploadRequest(machineName, events);
 
                     var result = _httpClient.PostAsJsonAsync("api/v1/TimeFlyTrap/Monitoring", postBody).GetAwaiter().GetResult();
                     result.EnsureSuccessStatusCode();
@@ -154,10 +155,12 @@ namespace TimeFlyTrap.WpfApp.Services
 
         private class UploadRequest
         {
+            public string MachineName { get; }
             public List<RecordingEvent> Events { get; }
 
-            public UploadRequest(List<RecordingEvent> events)
+            public UploadRequest(string machineName, List<RecordingEvent> events)
             {
+                MachineName = machineName;
                 Events = events;
             }
         }
