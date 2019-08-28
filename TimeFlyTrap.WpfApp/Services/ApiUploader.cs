@@ -165,10 +165,29 @@ namespace TimeFlyTrap.WpfApp.Services
             }
         }
 
+        private void StopThread()
+        {
+            try
+            {
+                _uploaderThread.Join(_options.Value.UploadInterval.Value);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
+        public void StopUploading()
+        {
+            _abort = true;
+            StopThread();
+        }
+
         public void Dispose()
         {
-            _httpClient?.Dispose();
             _abort = true;
+            StopThread();
+            _httpClient?.Dispose();
         }
     }
 }

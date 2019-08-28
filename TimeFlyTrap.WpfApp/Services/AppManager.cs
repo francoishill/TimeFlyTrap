@@ -6,10 +6,12 @@ namespace TimeFlyTrap.WpfApp.Services
     public class AppManager : IAppManager
     {
         private readonly IMainWindowProvider _mainWindowProvider;
+        private readonly IApiUploader _apiUploader;
 
-        public AppManager(IMainWindowProvider mainWindowProvider)
+        public AppManager(IMainWindowProvider mainWindowProvider, IApiUploader apiUploader)
         {
             _mainWindowProvider = mainWindowProvider;
+            _apiUploader = apiUploader;
         }
 
         public void HideMainWindow()
@@ -26,6 +28,7 @@ namespace TimeFlyTrap.WpfApp.Services
 
         public void ShutDown()
         {
+            _apiUploader.StopUploading();
             Application.Current.Shutdown();
         }
     }
